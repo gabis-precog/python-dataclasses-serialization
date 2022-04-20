@@ -134,7 +134,7 @@ default = object()
 def enum_from_name(enum_class: Type[Enum],
                    value: Optional[str],
                    fallback_value: Optional[Enum] = default,
-                   value_processor=lambda _: _):
+                   value_processor=identity_deserialization_func):
     if value is not None:
         value = value_processor(value)
 

@@ -1,5 +1,6 @@
 from typing import Optional, Union, Callable
 
+from dataclasses_serialization.enhancements.argument_helpers import merge_lazy_dicts
 from dataclasses_serialization.enhancements.deserialize_helpers import force_int_deserializer
 from dataclasses_serialization.enhancements.mapper import Serializer
 from dataclasses_serialization.serializer_base import noop_serialization
@@ -13,7 +14,7 @@ class JsonMapper(Serializer):
                  ):
         super().__init__(
             serialization_functions=serialization_functions,
-            deserialization_functions=deserialization_functions or {
+            deserialization_functions=merge_lazy_dicts(self, deserialization_functions, {
                 int: force_int_deserializer
-            },
+            }),
             key_serializer=key_serializer)

@@ -1,11 +1,14 @@
 from collections import Counter
 from dataclasses import dataclass
+from datetime import timedelta
 from enum import Enum
 from typing import Dict, List, Optional
 
 import pytest
 
+from dataclasses_serialization.enhancements.deserialize_helpers import enum_from_name, enum_from_value
 from dataclasses_serialization.enhancements.json_mapper import JsonMapper
+from dataclasses_serialization.enhancements.serializer_helpers import enum_to_name, enum_to_value
 from dataclasses_serialization.serializer_base.errors import DeserializationError
 
 
@@ -28,20 +31,27 @@ class TestModel:
 
 
 class SampleEnum(Enum):
-    value = 'Value'
+    item = 'Item'
 
 
 class SampleOtherEnum(Enum):
-    value = '1'
+    item = '1'
     other = '2'
 
 
 class TestEnhancements:
 
     def setup_method(self):
-        self._mapper = JsonMapper()
-        # SomeEnum: lambda value: value.name,
-        # SomeOtherEnum: lambda value: value.value,
+        self._mapper = JsonMapper(
+            serialization_functions={
+                SampleEnum: enum_to_name,
+                SampleOtherEnum: enum_to_value,
+            },
+            deserialization_functions={
+                SampleEnum: enum_from_name,
+                SampleOtherEnum: enum_from_value
+            }
+        )
 
     def test_deserialize_primitives(self):
         actual = self._mapper.deserialize(int, 4)
@@ -77,7 +87,7 @@ class TestEnhancements:
     #
     #     result = self._mapper.serialize(hint)
     #
-    #     assert_that(result,
+    #     assert result,
     #                 is_({'id': '1234', 'core_tag_id': 'tag1',
     #                      'compared_tag_id': 'tag2',
     #                      'focus_date_range': {'start': 1607076000000, 'end': 1607076000000, 'includeStart': True,
@@ -88,7 +98,7 @@ class TestEnhancements:
     #
     #     deserialized = self._mapper.deserialize(Hint, result)
     #
-    #     assert_that(deserialized,
+    #     assert deserialized,
     #                 same_bean_as(hint).ignoring(['total_variation_historic_i']))
     #
     # def test_serialize_hint_navigation(self):
@@ -100,7 +110,7 @@ class TestEnhancements:
     #
     #     deserialized = self._mapper.deserialize(HintNavigation, result)
     #
-    #     assert_that(deserialized, same_bean_as(navigation))
+    #     assert deserialized, same_bean_as(navigation))
 
     def test_normalize_key_case(self):
         input = {
@@ -124,14 +134,14 @@ class TestEnhancements:
     def test_deserialize_null(self):
         assert self._mapper.deserialize(TestModel, None) is None
 
-    # def test_deserialize_timedelta(self):
-    #     assert_that(self._mapper.deserialize(timedelta, 24433), is_(timedelta(milliseconds=24433)))
-    #     assert_that(self._mapper.deserialize(timedelta, timedelta(milliseconds=24433)),
-    #                 is_(timedelta(milliseconds=24433)))
-    #     assert_that(self._mapper.deserialize(timedelta, relativedelta(microseconds=24000000)),
-    #                 is_(timedelta(milliseconds=24000)))
-    #
-    #     assert_that(lambda: self._mapper.deserialize(timedelta, 'abc'), raises(DeserializationError))
+    def test_deserialize_timedelta(self):
+        assert self._mapper.deserialize(timedelta, 24433) == timedelta(milliseconds=24433)
+        assert self._mapper.deserialize(timedelta, timedelta(milliseconds=24433)) == timedelta(milliseconds=24433)
+        # assert self._mapper.deserialize(timedelta, relativedelta(microseconds=24000000)) == timedelta(
+        #     milliseconds=24000)
+
+        with pytest.raises(DeserializationError):
+            self._mapper.deserialize(timedelta, 'abc')
 
     # def test_deserialize_hint_non_standard_field_names(self):
     #     hint_data = {'id': '901372f9-c1d5-440b-9d63-f3362dd96d92', 'core_tag_id': '12186', 'compared_tag_id': '12186',
@@ -143,20 +153,24 @@ class TestEnhancements:
     #                  'jensen_shannon_2D': 0.045066787590019225}
     #
     #     hint = self._mapper.deserialize(Hint, hint_data)
-    #     assert_that(hint.jensen_shannon_2D, is_(0.045066787590019225))
+    #     assert hint.jensen_shannon_2D, is_(0.045066787590019225))
 
-    # @pytest.mark.parametrize('enum_type, value, expected_enum', (
-    #         (FieldActivityType, 'Mute', FieldActivityType.Mute),
-    #         (FieldActivityType, 'Undefined', FieldActivityType.Other),
-    #
-    #         (MessageTaskType, 'FieldActivity', MessageTaskType.field_activity),
-    #         (MessageTaskType, 'field_activity', MessageTaskType.field_activity),
-    #
-    #         (ConditionOperator, '<', ConditionOperator.lt),
-    #         (ConditionOperator, '>=', ConditionOperator.ge),
-    # ))
-    # def test_deserialize_enums(self, enum_type, value, expected_enum):
-    #     assert_that(self._mapper.deserialize(enum_type, value), is_(expected_enum))
+    @pytest.mark.parametrize('enum_type, value, expected_enum', (
+            (SampleEnum, 'item', SampleEnum.item),
+            (SampleOtherEnum, '1', SampleOtherEnum.item),
+            (SampleOtherEnum, '2', SampleOtherEnum.other),
+    ))
+    def test_deserialize_enums(self, enum_type, value, expected_enum):
+        assert self._mapper.deserialize(enum_type, value) == expected_enum
+
+    @pytest.mark.parametrize('enum_value, expected_value', (
+            (SampleEnum.item, 'item'),
+            (SampleOtherEnum.item, '1'),
+            (SampleOtherEnum.other, '2'),
+
+    ))
+    def test_serialize_enums(self, enum_value, expected_value):
+        assert self._mapper.serialize(enum_value) == expected_value
 
     @pytest.mark.parametrize('enum_type, value', (
             (SampleEnum, 'NonExisting'),
