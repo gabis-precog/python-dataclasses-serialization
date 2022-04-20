@@ -7,7 +7,6 @@ from pathlib import Path
 from pathlib import PurePath
 from typing import Callable, Union, Optional, TypeVar, Type, Any
 
-from pathlib2 import PurePath as PurePath2, Path as Path2
 from toolz import curry
 
 from dataclasses_serialization.enhancements.deserialize_helpers import timedelta_deserialize, dict_to_dataclass, \
@@ -68,7 +67,7 @@ class Serializer(BaseSerialize):
             float: self._float_serializer,
             bool: noop_serialization,
             timedelta: timedelta_to_milliseconds,
-            (PurePath, PurePath2): lambda value: str(value),
+            PurePath: lambda value: str(value),
             type(None): noop_serialization,
         }
 
@@ -110,7 +109,6 @@ class Serializer(BaseSerialize):
             str: noop_deserialization,
             float: number_to_float,
             bool: noop_deserialization,
-            Path2: lambda cls, value: Path2(value),
             Path: lambda cls, value: Path(value),
             type(None): noop_deserialization
         }
