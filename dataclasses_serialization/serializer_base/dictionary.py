@@ -38,9 +38,9 @@ def dict_isinstance(o, t):
 
 @curry
 def dict_serialization(
-    obj,
-    key_serialization_func=noop_serialization,
-    value_serialization_func=noop_serialization,
+        obj,
+        key_serialization_func=noop_serialization,
+        value_serialization_func=noop_serialization,
 ):
     if not isinstance(obj, dict):
         raise SerializationError(
@@ -55,10 +55,10 @@ def dict_serialization(
 
 @curry
 def dict_deserialization(
-    type_,
-    obj,
-    key_deserialization_func=noop_deserialization,
-    value_deserialization_func=noop_deserialization,
+        type_,
+        obj,
+        key_deserialization_func=noop_deserialization,
+        value_deserialization_func=noop_deserialization,
 ):
     if not isinstance(obj, dict):
         raise DeserializationError(

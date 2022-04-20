@@ -60,6 +60,11 @@ setup(
     setup_requires=["wheel"],
     author="Robert Wright",
     author_email="madman.bob@hotmail.co.uk",
+    extras_require={
+        'dateutil': {'python-dateutil >= 2.8.0'},
+        'key_mapping': {'pydash >= 5.0.0'},
+        'numpy': {'numpy >= 1.22.0'}
+    },
     description="Serialize/deserialize Python dataclasses to various other data formats",
     long_description=get_long_description(),
     long_description_content_type="text/markdown",
@@ -71,6 +76,8 @@ setup(
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
     ],
     python_requires=">=3.6",
     cmdclass={"verify": VerifyCommand},
