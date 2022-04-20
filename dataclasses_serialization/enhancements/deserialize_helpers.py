@@ -1,10 +1,10 @@
 import numbers
 from datetime import timedelta, datetime
+from datetime import timezone
 from enum import Enum
 from typing import Any, Union
 from typing import Optional, Type
 
-import pytz
 from toolz import curry
 from typing_inspect import get_args
 
@@ -130,7 +130,6 @@ def collection_deserialization(type_, obj, target_collection,
 default = object()
 
 
-@curry
 def enum_from_name(enum_class: Type[Enum],
                    value: Optional[str],
                    fallback_value: Optional[Enum] = default,
@@ -156,12 +155,8 @@ def enum_from_value(enum_class: Type[Enum], value: Optional[str]):
     raise Exception('Unknown Enum value "%s" for class "%s"' % (value, enum_class))
 
 
-def get_utc_timezone():
-    return pytz.utc
-
-
 def datetime_utc_from_timestamp_ms(millis: int) -> datetime:
-    return datetime.fromtimestamp(millis / 1000, tz=get_utc_timezone())
+    return datetime.utcfromtimestamp(millis / 1000)
 
 
 def datetime_utc_from_inspected_type(data: Union[str, int]) -> datetime:
@@ -179,4 +174,4 @@ def datetime_utc_from_formatted(date_string: Optional[Union[str, int]], date_for
     if isinstance(date_string, numbers.Number):
         return datetime_utc_from_timestamp_ms(date_string)
 
-    return datetime.strptime(date_string, date_format).replace(tzinfo=get_utc_timezone())
+    return datetime.strptime(date_string, date_format).replace(tzinfo=timezone.utc)
