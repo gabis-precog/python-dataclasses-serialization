@@ -1,4 +1,6 @@
 from datetime import timedelta, datetime
+from math import isnan, isinf
+from typing import Optional
 
 
 def keep_not_none_value(dct: dict) -> dict:
@@ -11,3 +13,12 @@ def timedelta_to_milliseconds(td: timedelta) -> int:
 
 def datetime_to_milliseconds(item: datetime) -> int:
     return int(item.timestamp() * 1000)
+
+
+def float_serializer(value: float) -> Optional[float]:
+    if isinstance(value, float):
+        if isnan(value):
+            return None
+        if isinf(value):
+            return None  # todo: is this a good idea ?
+    return value

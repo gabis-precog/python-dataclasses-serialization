@@ -40,6 +40,8 @@ class TestEnhancements:
 
     def setup_method(self):
         self._mapper = JsonMapper()
+        # SomeEnum: lambda value: value.name,
+        # SomeOtherEnum: lambda value: value.value,
 
     def test_deserialize_primitives(self):
         actual = self._mapper.deserialize(int, 4)
