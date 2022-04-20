@@ -1,0 +1,12 @@
+more_properties==1.1.1
+typing_inspect==0.7.1
+toolz==0.11.2
+toposort==1.7
+pydash==5.1.0
+python-dateutil==2.8.2
+numpy==1.21.6
+flake8==4.0.1
+pytest==7.1.0
+pytest-cov==3.0.0
+coverage==6.3.2
+pytz==2022.1

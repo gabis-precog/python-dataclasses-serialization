@@ -5,12 +5,17 @@ from typing import TypeVar, get_type_hints
 from toolz import curry
 from typing_inspect import get_args, get_generic_bases, get_origin
 
-try:
+try:  # python < 3.7
     from typing import GenericMeta
 except ImportError:
-    from typing import _GenericAlias, _SpecialForm
+    try:  # python >= 3.9
+        from typing import _GenericAlias, _SpecialForm, _SpecialGenericAlias
 
-    GenericMeta = (_GenericAlias, _SpecialForm)
+        GenericMeta = (_GenericAlias, _SpecialForm, _SpecialGenericAlias)
+    except ImportError:  # 3.7 <= python <= 3.8
+        from typing import _GenericAlias, _SpecialForm
+
+        GenericMeta = (_GenericAlias, _SpecialForm)
 
 __all__ = [
     "isinstance",
