@@ -1,23 +1,14 @@
-import json
 from dataclasses import dataclass
 from datetime import datetime, timedelta
-from enum import Enum
 from pathlib import Path
 from pathlib import PurePath
-from typing import Union, Optional, TypeVar, Type, Any
 
-from toolz import curry
-
-from dataclasses_serialization.mapper.argument_helpers import merge_lazy_dicts
 from dataclasses_serialization.mapper.deserialize_helpers import timedelta_deserialize, dict_to_dataclass, \
     collection_deserialization, number_to_float, datetime_utc_from_inspected_type
 from dataclasses_serialization.mapper.serializer_helpers import keep_not_none_value, timedelta_to_milliseconds, \
     datetime_to_milliseconds, float_serializer
-from dataclasses_serialization.mapper.typing import SerializerMap
-from dataclasses_serialization.serializer_base import Serializer as BaseSerialize, noop_serialization, \
+from dataclasses_serialization.serializer_base import noop_serialization, \
     dict_serialization, noop_deserialization, dict_deserialization
-from dataclasses_serialization.serializer_base.noop import identity
-from dataclasses_serialization.serializer_base.typing import dataclass_field_types
 
 
 def default_serializers(mapper):

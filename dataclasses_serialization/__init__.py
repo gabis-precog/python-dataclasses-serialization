@@ -29,12 +29,12 @@ InventoryItem(name='Apple', unit_price=0.2, quantity_on_hand=20)
 
 ## Custom Serializers
 
-To create a custom serializer, create an instance of `dataclasses_serialization.serializer_base.Serializer`:
+To create a custom serializer, create an instance of `dataclasses_serialization.mapper.json_mapper.JsonMapper`:
 
 
 >>> from dataclasses_serialization.serializer_base import (
 ...             noop_serialization, noop_deserialization, dict_serialization,
-...             dict_deserialization, list_deserialization, Serializer
+...             dict_deserialization, list_deserialization
 ...           )
 
 >>> custom_mapper = JsonMapper(
