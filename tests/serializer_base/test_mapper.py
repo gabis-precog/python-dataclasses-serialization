@@ -5,15 +5,15 @@ from typing import List
 import pytest
 from pydash import camel_case
 
-from dataclasses_serialization.enhancements.deserialize_helpers import enum_from_name, enum_from_value
-from dataclasses_serialization.enhancements.json_mapper import JsonMapper
-from dataclasses_serialization.enhancements.serializer_helpers import enum_to_name, enum_to_value
+from dataclasses_serialization.mapper.deserialize_helpers import enum_from_name, enum_from_value
+from dataclasses_serialization.mapper.json_mapper import JsonMapper
+from dataclasses_serialization.mapper.serializer_helpers import enum_to_name, enum_to_value
 from dataclasses_serialization.extensions.key_helpers import normalize_key_case
 from dataclasses_serialization.serializer_base.errors import DeserializationError
-from tests.serializer_base.fixtures import SampleEnum, SampleOtherEnum, TestModelTyping, TestSubModel
+from tests.serializer_base.fixtures import SampleEnum, SampleOtherEnum, SampleModelTyping, SampleSubModel
 
 
-class TestEnhancements:
+class TestMapper:
 
     def setup_method(self):
         self._serializers = {
@@ -25,10 +25,10 @@ class TestEnhancements:
             SampleOtherEnum: enum_from_value
         }
 
-        self._mapper = JsonMapper(
-            serialization_functions=self._serializers,
-            deserialization_functions=self._deserializers,
-            key_deserializer=normalize_key_case
+        self._mapper = (
+            JsonMapper(key_deserializer=normalize_key_case)
+                .register_serializers(self._serializers)
+                .register_deserializers(self._deserializers)
         )
 
     def test_deserialize_primitives(self):
@@ -42,11 +42,13 @@ class TestEnhancements:
         assert actual == [1, 3, 4]
 
     def test_custom_dataclass_key_serialized(self):
-        mapper = JsonMapper(key_serializer=camel_case,
-                            serialization_functions=self._serializers,
-                            deserialization_functions=self._deserializers)
+        mapper = self._mapper = (
+            JsonMapper(key_serializer=camel_case)
+                .register_serializers(self._serializers)
+                .register_deserializers(self._deserializers)
+        )
 
-        result = mapper.serialize(TestModelTyping('abc', {'a': 'b'}, [1, 2, 3], 4, 'dfg', TestSubModel('mmm')))
+        result = mapper.serialize(SampleModelTyping('abc', {'a': 'b'}, [1, 2, 3], 4, 'dfg', SampleSubModel('mmm')))
 
         assert 'anotherValue' in result
         assert 'aValue' in result['subModel']
@@ -59,9 +61,9 @@ class TestEnhancements:
             'YetAnotherValue': 4,
             'MLModel': 'dfg'
         }
-        result = self._mapper.deserialize(TestModelTyping, serialized)
+        result = self._mapper.deserialize(SampleModelTyping, serialized)
 
-        assert result == TestModelTyping('abc', {'a': 'b'}, [1, 2, 3], 4, 'dfg')
+        assert result == SampleModelTyping('abc', {'a': 'b'}, [1, 2, 3], 4, 'dfg')
 
     def test_deserialize_number_to_float(self):
         assert self._mapper.deserialize(float, 5) == 5.0
@@ -71,7 +73,7 @@ class TestEnhancements:
             self._mapper.deserialize(float, 'abc')
 
     def test_deserialize_null(self):
-        assert self._mapper.deserialize(TestModelTyping, None) is None
+        assert self._mapper.deserialize(SampleModelTyping, None) is None
 
     def test_deserialize_timedelta(self):
         assert self._mapper.deserialize(timedelta, 24433) == timedelta(milliseconds=24433)
@@ -108,7 +110,7 @@ class TestEnhancements:
 
     def test_deserialize_dataclass_failure(self):
         with pytest.raises(DeserializationError):
-            self._mapper.deserialize(TestModelTyping, {})
+            self._mapper.deserialize(SampleModelTyping, {})
 
     def test_serialize_counter(self):
         counter = Counter(a=1, b=3)

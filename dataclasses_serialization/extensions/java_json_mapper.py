@@ -1,6 +1,6 @@
 from pydash import camel_case
 
-from dataclasses_serialization.enhancements.json_mapper import JsonMapper
+from dataclasses_serialization.mapper.json_mapper import JsonMapper
 
 
 class JavaJsonMapper(JsonMapper):

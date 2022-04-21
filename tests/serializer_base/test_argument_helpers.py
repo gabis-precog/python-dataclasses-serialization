@@ -1,6 +1,6 @@
 import pytest
 
-from dataclasses_serialization.enhancements.argument_helpers import merge_lazy_dicts
+from dataclasses_serialization.mapper.argument_helpers import merge_lazy_dicts
 
 
 @pytest.mark.parametrize('dict1,dict2,expected', (
