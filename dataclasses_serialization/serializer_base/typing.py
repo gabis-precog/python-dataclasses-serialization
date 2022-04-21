@@ -19,6 +19,13 @@ except ImportError:
 
         GenericMeta = (_GenericAlias, _SpecialForm)
 
+if sys.version_info >= (3, 9):
+    def is_generic_alias(cls):
+        return isinstance(cls, types.GenericAlias)
+else:
+    def is_generic_alias(cls):
+        return False
+
 __all__ = [
     "is_instance",
     "is_subclass",
@@ -78,10 +85,9 @@ def is_subclass(cls, classinfo):
     if classinfo_origin in issubclass_generic_funcs:
         return issubclass_generic_funcs[classinfo_origin](cls, classinfo)
 
-    if sys.version_info >= (3, 9):
-        if isinstance(cls, types.GenericAlias):
-            cls_origin = get_origin(cls)
-            return is_subclass(cls_origin, classinfo)
+    if is_generic_alias(cls):
+        cls_origin = get_origin(cls)
+        return is_subclass(cls_origin, classinfo)
 
     if not isinstance(cls, type):
         return False
