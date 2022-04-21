@@ -1,10 +1,12 @@
-from typing import Any, Callable, Optional, Union
+from typing import Optional, Dict
+
+from dataclasses_serialization.enhancements.typing import SerializerMap
 
 
 def merge_lazy_dicts(mapper,
-                     dict1: Optional[Union[dict, Callable[[Any], dict]]],
-                     dict2: Optional[Union[dict, Callable[[Any], dict]]] = None,
-                     ) -> dict:
+                     dict1: Optional[SerializerMap],
+                     dict2: Optional[SerializerMap] = None,
+                     ) -> Dict:
     if callable(dict1):
         dict1 = dict1(mapper)
 

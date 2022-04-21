@@ -60,8 +60,8 @@ class Serializer:
 
         try:
             deserialization_func = self.deserialization_functions[cls]
-        except KeyError:
-            raise DeserializationError("Cannot deserialize type {}".format(cls))
+        except KeyError as exception:
+            raise DeserializationError("Cannot deserialize type {}".format(cls)) from exception
 
         return deserialization_func(cls, serialized_obj)
 

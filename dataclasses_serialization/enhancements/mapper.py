@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from enum import Enum
 from pathlib import Path
 from pathlib import PurePath
-from typing import Callable, Union, Optional, TypeVar, Type, Any
+from typing import Union, Optional, TypeVar, Type, Any
 
 from toolz import curry
 
@@ -14,6 +14,7 @@ from dataclasses_serialization.enhancements.deserialize_helpers import timedelta
 from dataclasses_serialization.enhancements.key_helpers import normalize_key_case
 from dataclasses_serialization.enhancements.serializer_helpers import keep_not_none_value, timedelta_to_milliseconds, \
     datetime_to_milliseconds, float_serializer
+from dataclasses_serialization.enhancements.typing import SerializerMap
 from dataclasses_serialization.serializer_base import Serializer as BaseSerialize, noop_serialization, \
     dict_serialization, noop_deserialization, dict_deserialization
 from dataclasses_serialization.serializer_base.typing import dataclass_field_types
@@ -25,8 +26,8 @@ T = TypeVar('T')
 
 class Serializer(BaseSerialize):
     def __init__(self,
-                 serialization_functions: Optional[Union[dict, Callable]] = None,
-                 deserialization_functions: Optional[Union[dict, Callable]] = None,
+                 serialization_functions: Optional[SerializerMap] = None,
+                 deserialization_functions: Optional[SerializerMap] = None,
                  key_serializer=noop_serialization
                  ):
         self._key_serializer = key_serializer
@@ -104,3 +105,29 @@ class Serializer(BaseSerialize):
 
     def to_json(self, data: Any) -> str:
         return json.dumps(self.serialize(data))
+
+    def register_serializers(self, serializers: SerializerMap):
+        if callable(serializers):
+            serializers = serializers(self)
+
+        for key, value in serializers.items():
+            if isinstance(key, tuple):
+                for sub_key in key:
+                    self.register_serializer(sub_key, value)
+            else:
+                self.register_serializer(key, value)
+
+        return self
+
+    def register_deserializers(self, deserializers: SerializerMap):
+        if callable(deserializers):
+            deserializers = deserializers(self)
+
+        for key, value in deserializers.items():
+            if isinstance(key, tuple):
+                for sub_key in key:
+                    self.register_deserializer(sub_key, value)
+            else:
+                self.register_deserializer(key, value)
+
+        return self

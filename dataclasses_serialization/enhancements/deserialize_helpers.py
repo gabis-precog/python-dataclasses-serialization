@@ -96,8 +96,11 @@ def dict_to_dataclass(cls,
     deserialized_key_dict = {key_deserialization_func(key): value for key, value in dct.items()}
 
     try:
-        init_arguments = {fld.name: deserialization_func(fld_type, deserialized_key_dict[fld.name]) for fld, fld_type in
-                          fld_types if fld.name in deserialized_key_dict}
+        init_arguments = {}
+        for fld, fld_type in fld_types:
+            if fld.name in deserialized_key_dict:
+                init_arguments[fld.name] = deserialization_func(fld_type, deserialized_key_dict[fld.name])
+
         return cls(**init_arguments)
     except TypeError as exception:
         raise DeserializationError(
@@ -120,9 +123,9 @@ def collection_deserialization(type_, obj, target_collection,
     argument_types = get_args(type_, evaluate=True)
 
     if len(argument_types) == 0:
-        return obj
+        return target_collection(obj)
 
-    (value_type, *_) = argument_types
+    value_type = argument_types[0]
 
     return target_collection([deserialization_func(value_type, value) for value in obj])
 
