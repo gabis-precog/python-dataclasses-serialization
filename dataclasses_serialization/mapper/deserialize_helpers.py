@@ -1,9 +1,8 @@
 import numbers
 from datetime import timedelta, datetime
 from datetime import timezone
-from enum import Enum
 from typing import Any, Union
-from typing import Optional, Type
+from typing import Optional
 
 from toolz import curry
 from typing_inspect import get_args
@@ -130,32 +129,6 @@ def collection_deserialization(type_, obj, target_collection,
     return target_collection([deserialization_func(value_type, value) for value in obj])
 
 
-default = object()
-
-
-def enum_from_name(enum_class: Type[Enum],
-                   value: Optional[str],
-                   fallback_value: Optional[Enum] = default,
-                   value_processor=identity_deserialization_func):
-    if value is not None:
-        value = value_processor(value)
-
-    for enum in enum_class:
-        if enum.name == value:
-            return enum
-
-    if fallback_value is not default:
-        return fallback_value
-
-    raise Exception('Unknown Enum name "%s" for class "%s"' % (value, enum_class))
-
-
-def enum_from_value(enum_class: Type[Enum], value: Optional[str]):
-    for enum in enum_class:
-        if enum.value == value:
-            return enum
-
-    raise Exception('Unknown Enum value "%s" for class "%s"' % (value, enum_class))
 
 
 def datetime_utc_from_timestamp_ms(millis: int) -> datetime:

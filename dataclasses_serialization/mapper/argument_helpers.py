@@ -1,6 +1,10 @@
-from typing import Dict, Tuple
+from typing import Dict
 
 from dataclasses_serialization.mapper.typing import SerializerMap
+
+__all__ = [
+    'merge_lazy_dicts'
+]
 
 
 def merge_lazy_dicts(mapper,

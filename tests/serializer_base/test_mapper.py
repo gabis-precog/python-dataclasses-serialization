@@ -5,9 +5,8 @@ from typing import List
 import pytest
 from pydash import camel_case
 
-from dataclasses_serialization.mapper.deserialize_helpers import enum_from_name, enum_from_value
+from dataclasses_serialization.mapper.enum_helpers import enum_to_name, enum_to_value, enum_from_name, enum_from_value
 from dataclasses_serialization.mapper.json_mapper import JsonMapper
-from dataclasses_serialization.mapper.serializer_helpers import enum_to_name, enum_to_value
 from dataclasses_serialization.extensions.key_helpers import normalize_key_case
 from dataclasses_serialization.serializer_base.errors import DeserializationError
 from tests.serializer_base.fixtures import SampleEnum, SampleOtherEnum, SampleModelTyping, SampleSubModel

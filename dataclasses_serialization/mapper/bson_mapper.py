@@ -10,6 +10,8 @@ from dataclasses_serialization.serializer_base.noop import identity
 
 _default = object()
 
+__all__ = ['BsonMapper']
+
 
 class BsonMapper(Mapper):
     def __init__(self,
@@ -34,4 +36,3 @@ class BsonMapper(Mapper):
         self.register_serializer(bson.ObjectId, noop_serialization)
         self.register_deserializer(bson.ObjectId, noop_deserialization)
         self.register_deserializer(int, bson_int_deserializer)
-

@@ -23,10 +23,3 @@ def float_serializer(value: float) -> Optional[float]:
             return None  # todo: is this a good idea ?
     return value
 
-
-def enum_to_name(item):
-    return item.name
-
-
-def enum_to_value(item):
-    return item.value

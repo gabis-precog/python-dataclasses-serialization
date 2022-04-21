@@ -10,6 +10,11 @@ from dataclasses_serialization.mapper.serializer_helpers import keep_not_none_va
 from dataclasses_serialization.serializer_base import noop_serialization, \
     dict_serialization, noop_deserialization, dict_deserialization
 
+__all__ = [
+    'default_serializers',
+    'default_deserializers'
+]
+
 
 def default_serializers(mapper):
     return {
