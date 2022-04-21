@@ -10,12 +10,12 @@ from dataclasses_serialization.serializer_base import Serializer as BaseSerializ
 from dataclasses_serialization.serializer_base.noop import identity
 from dataclasses_serialization.serializer_base.typing import dataclass_field_types
 
-__all__ = ['Serializer']
+__all__ = ['Mapper']
 
 T = TypeVar('T')
 
 
-class Serializer(BaseSerialize):
+class Mapper(BaseSerialize):
     def __init__(self,
                  serialization_functions: Optional[SerializerMap] = default_serializers,
                  deserialization_functions: Optional[SerializerMap] = default_deserializers,
@@ -55,6 +55,14 @@ class Serializer(BaseSerialize):
         return json.dumps(self.serialize(data))
 
     def register_serializers(self, serializers: SerializerMap):
+        """
+
+        Register multiple serializers. Adds or overrides existing.
+
+        >>> from dataclasses_serialization.serializer_base import noop_serialization
+        >>> mapper = Mapper().register_serializers({int:noop_serialization})
+
+        """
         if callable(serializers):
             serializers = serializers(self)
 
@@ -68,6 +76,14 @@ class Serializer(BaseSerialize):
         return self
 
     def register_deserializers(self, deserializers: SerializerMap):
+        """
+
+        Register multiple deserializers. Adds or overrides existing.
+
+        >>> from dataclasses_serialization.mapper.deserialize_helpers import force_int_deserializer
+        >>> mapper = Mapper().register_deserializers({int:force_int_deserializer})
+
+        """
         if callable(deserializers):
             deserializers = deserializers(self)
 

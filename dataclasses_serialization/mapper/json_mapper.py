@@ -1,7 +1,7 @@
 from typing import Optional
 
 from dataclasses_serialization.mapper.deserialize_helpers import force_int_deserializer
-from dataclasses_serialization.mapper.mapper import Serializer
+from dataclasses_serialization.mapper.mapper import Mapper
 from dataclasses_serialization.mapper.typing import SerializerMap
 from dataclasses_serialization.serializer_base.noop import identity
 
@@ -12,7 +12,7 @@ __all__ = [
 _default = object()
 
 
-class JsonMapper(Serializer):
+class JsonMapper(Mapper):
     """
     Mapper with sane defaults for json de/serializing.
 

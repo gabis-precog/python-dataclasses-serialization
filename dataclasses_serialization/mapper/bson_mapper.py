@@ -3,7 +3,7 @@ from typing import Optional
 import bson
 
 from dataclasses_serialization.bson import bson_int_deserializer
-from dataclasses_serialization.mapper.mapper import Serializer
+from dataclasses_serialization.mapper.mapper import Mapper
 from dataclasses_serialization.mapper.typing import SerializerMap
 from dataclasses_serialization.serializer_base import noop_deserialization, noop_serialization
 from dataclasses_serialization.serializer_base.noop import identity
@@ -11,7 +11,7 @@ from dataclasses_serialization.serializer_base.noop import identity
 _default = object()
 
 
-class BsonMapper(Serializer):
+class BsonMapper(Mapper):
     def __init__(self,
                  serialization_functions: Optional[SerializerMap] = _default,
                  deserialization_functions: Optional[SerializerMap] = _default,
