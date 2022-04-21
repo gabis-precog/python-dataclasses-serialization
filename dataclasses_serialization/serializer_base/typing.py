@@ -1,3 +1,4 @@
+import sys
 import types
 from dataclasses import dataclass, fields, is_dataclass
 from functools import partial
@@ -27,7 +28,6 @@ __all__ = [
 ]
 
 get_args = partial(get_args, evaluate=True)
-
 
 isinstance_generic_funcs = {}
 issubclass_generic_funcs = {}
@@ -78,9 +78,10 @@ def is_subclass(cls, classinfo):
     if classinfo_origin in issubclass_generic_funcs:
         return issubclass_generic_funcs[classinfo_origin](cls, classinfo)
 
-    if isinstance(cls, types.GenericAlias):
-        cls_origin = get_origin(cls)
-        return is_subclass(cls_origin, classinfo)
+    if sys.version_info >= (3, 9):
+        if isinstance(cls, types.GenericAlias):
+            cls_origin = get_origin(cls)
+            return is_subclass(cls_origin, classinfo)
 
     if not isinstance(cls, type):
         return False
