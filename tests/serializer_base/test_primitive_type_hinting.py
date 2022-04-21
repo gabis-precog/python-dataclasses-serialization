@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from typing import Optional
 
 from dataclasses_serialization.enhancements.json_mapper import JsonMapper
-from dataclasses_serialization.enhancements.key_helpers import normalize_key_case
+from dataclasses_serialization.extensions.key_helpers import normalize_key_case
 from tests.serializer_base.fixtures import TestSubModel
 
 if sys.version_info >= (3, 9):
@@ -28,6 +28,6 @@ if sys.version_info >= (3, 9):
             'YetAnotherValue': 4,
             'MLModel': 'dfg'
         }
-        result = JsonMapper(key_serializer=normalize_key_case).deserialize(TestModelPrimitive, serialized)
+        result = JsonMapper(key_deserializer=normalize_key_case).deserialize(TestModelPrimitive, serialized)
 
         assert result == TestModelPrimitive('abc', {'a': 'b'}, [1, 2, 3], 4, 'dfg')

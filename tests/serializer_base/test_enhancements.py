@@ -8,6 +8,7 @@ from pydash import camel_case
 from dataclasses_serialization.enhancements.deserialize_helpers import enum_from_name, enum_from_value
 from dataclasses_serialization.enhancements.json_mapper import JsonMapper
 from dataclasses_serialization.enhancements.serializer_helpers import enum_to_name, enum_to_value
+from dataclasses_serialization.extensions.key_helpers import normalize_key_case
 from dataclasses_serialization.serializer_base.errors import DeserializationError
 from tests.serializer_base.fixtures import SampleEnum, SampleOtherEnum, TestModelTyping, TestSubModel
 
@@ -26,7 +27,8 @@ class TestEnhancements:
 
         self._mapper = JsonMapper(
             serialization_functions=self._serializers,
-            deserialization_functions=self._deserializers
+            deserialization_functions=self._deserializers,
+            key_deserializer=normalize_key_case
         )
 
     def test_deserialize_primitives(self):

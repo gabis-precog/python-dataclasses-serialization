@@ -11,12 +11,12 @@ from toolz import curry
 from dataclasses_serialization.enhancements.argument_helpers import merge_lazy_dicts
 from dataclasses_serialization.enhancements.deserialize_helpers import timedelta_deserialize, dict_to_dataclass, \
     collection_deserialization, number_to_float, datetime_utc_from_inspected_type
-from dataclasses_serialization.enhancements.key_helpers import normalize_key_case
 from dataclasses_serialization.enhancements.serializer_helpers import keep_not_none_value, timedelta_to_milliseconds, \
     datetime_to_milliseconds, float_serializer
 from dataclasses_serialization.enhancements.typing import SerializerMap
 from dataclasses_serialization.serializer_base import Serializer as BaseSerialize, noop_serialization, \
     dict_serialization, noop_deserialization, dict_deserialization
+from dataclasses_serialization.serializer_base.noop import identity
 from dataclasses_serialization.serializer_base.typing import dataclass_field_types
 
 __all__ = ['Serializer']
@@ -28,9 +28,11 @@ class Serializer(BaseSerialize):
     def __init__(self,
                  serialization_functions: Optional[SerializerMap] = None,
                  deserialization_functions: Optional[SerializerMap] = None,
-                 key_serializer=noop_serialization
+                 key_serializer=identity,
+                 key_deserializer=identity
                  ):
         self._key_serializer = key_serializer
+        self._key_deserializer = key_deserializer
 
         super().__init__(merge_lazy_dicts(self, self._shared_serializers(), serialization_functions),
                          merge_lazy_dicts(self, self._shared_deserializers(), deserialization_functions))
@@ -65,7 +67,7 @@ class Serializer(BaseSerialize):
 
             timedelta: timedelta_deserialize,
             datetime: lambda cls, value: datetime_utc_from_inspected_type(value),
-            dataclass: lambda cls, value: dict_to_dataclass(cls, value, self.deserialize, normalize_key_case,
+            dataclass: lambda cls, value: dict_to_dataclass(cls, value, self.deserialize, self._key_deserializer,
                                                             serializer=self),
             dict: dict_deserialization(key_deserialization_func=self.deserialize,
                                        value_deserialization_func=self.deserialize),
