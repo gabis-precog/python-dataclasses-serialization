@@ -23,6 +23,7 @@ def relative_delta_to_timedelta(relative_delta: relativedelta) -> timedelta:
                      minutes=normalized.minutes,
                      seconds=normalized.seconds)
 
+
 def timedelta_deserialize(cls, value: Any) -> timedelta:
     if is_instance(value, timedelta):
         return value
