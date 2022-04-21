@@ -13,12 +13,12 @@ from dataclasses_serialization.serializer_base.noop import (
     noop_serialization,
 )
 from dataclasses_serialization.serializer_base.serializer import Serializer
-from dataclasses_serialization.serializer_base.typing import isinstance, issubclass
+from dataclasses_serialization.serializer_base.typing import is_instance, is_subclass
 from dataclasses_serialization.serializer_base.union import union_deserialization
 
 __all__ = [
-    "isinstance",
-    "issubclass",
+    "is_instance",
+    "is_subclass",
     "noop_serialization",
     "noop_deserialization",
     "dict_to_dataclass",

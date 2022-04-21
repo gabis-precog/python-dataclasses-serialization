@@ -6,7 +6,7 @@ from typing_inspect import get_args
 
 from dataclasses_serialization.serializer_base.errors import DeserializationError
 from dataclasses_serialization.serializer_base.noop import noop_deserialization
-from dataclasses_serialization.serializer_base.typing import isinstance
+from dataclasses_serialization.serializer_base.typing import is_instance
 
 __all__ = ["list_deserialization"]
 
@@ -15,7 +15,7 @@ get_args = partial(get_args, evaluate=True)
 
 @curry
 def list_deserialization(type_, obj, deserialization_func=noop_deserialization):
-    if not isinstance(obj, list):
+    if not is_instance(obj, list):
         raise DeserializationError(
             "Cannot deserialize {} {!r} using list deserialization".format(
                 type(obj), obj

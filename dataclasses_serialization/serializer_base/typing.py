@@ -1,3 +1,4 @@
+import types
 from dataclasses import dataclass, fields, is_dataclass
 from functools import partial
 from typing import TypeVar, get_type_hints
@@ -18,8 +19,8 @@ except ImportError:
         GenericMeta = (_GenericAlias, _SpecialForm)
 
 __all__ = [
-    "isinstance",
-    "issubclass",
+    "is_instance",
+    "is_subclass",
     "register_generic_isinstance",
     "register_generic_issubclass",
     "dataclass_field_types",
@@ -27,8 +28,6 @@ __all__ = [
 
 get_args = partial(get_args, evaluate=True)
 
-original_isinstance = isinstance
-original_issubclass = issubclass
 
 isinstance_generic_funcs = {}
 issubclass_generic_funcs = {}
@@ -48,48 +47,54 @@ def register_generic_issubclass(origin, func):
     return func
 
 
-def isinstance(o, t):
+def is_instance(o, t):
     if t is dataclass:
-        return not original_isinstance(o, type) and is_dataclass(o)
+        return not isinstance(o, type) and is_dataclass(o)
 
     t_origin = get_origin(t)
     if t_origin in isinstance_generic_funcs:
         return isinstance_generic_funcs[t_origin](o, t)
 
-    return original_isinstance(o, t)
+    return isinstance(o, t)
 
 
-def issubclass(cls, classinfo):
+def is_subclass(cls, classinfo):
     if classinfo is dataclass:
-        return original_isinstance(cls, type) and is_dataclass(cls)
+        return isinstance(cls, type) and is_dataclass(cls)
 
     if cls is dataclass:
-        return issubclass(object, classinfo)
+        return is_subclass(object, classinfo)
 
-    if original_isinstance(cls, GenericMeta):
+    if isinstance(cls, GenericMeta):
         origin = get_origin(cls)
         bases = get_generic_bases(origin) or (origin,)
         return classinfo in bases
 
     classinfo_origin = get_origin(classinfo)
-    if classinfo_origin is None and original_isinstance(classinfo, GenericMeta):
+
+    if classinfo_origin is None and isinstance(classinfo, GenericMeta):
         classinfo_origin = classinfo
+
     if classinfo_origin in issubclass_generic_funcs:
         return issubclass_generic_funcs[classinfo_origin](cls, classinfo)
 
-    if not original_isinstance(cls, type):
+    if isinstance(cls, types.GenericAlias):
+        cls_origin = get_origin(cls)
+        return is_subclass(cls_origin, classinfo)
+
+    if not isinstance(cls, type):
         return False
 
-    return original_issubclass(cls, classinfo)
+    return issubclass(cls, classinfo)
 
 
 @curry
 def bind(bindings, generic):
-    if isinstance(generic, GenericMeta):
+    if is_instance(generic, GenericMeta):
         return generic[
             tuple(bindings[type_param] for type_param in generic.__parameters__)
         ]
-    elif isinstance(generic, TypeVar):
+    elif is_instance(generic, TypeVar):
         return bindings[generic]
     else:
         return generic

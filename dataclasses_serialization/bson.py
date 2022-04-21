@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from dataclasses_serialization.serializer_base import isinstance, noop_serialization, noop_deserialization, dict_serialization, dict_deserialization, list_deserialization, Serializer, DeserializationError
+from dataclasses_serialization.serializer_base import is_instance, noop_serialization, noop_deserialization, dict_serialization, dict_deserialization, list_deserialization, Serializer, DeserializationError
 
 try:
     import bson
@@ -34,7 +34,7 @@ def bson_int_deserializer(cls, obj):
     Fail if coercion lossy
     """
 
-    if isinstance(obj, cls):
+    if is_instance(obj, cls):
         return obj
 
     try:

@@ -11,7 +11,7 @@ from typing_inspect import get_args
 from dataclasses_serialization.serializer_base.errors import DeserializationError
 from dataclasses_serialization.serializer_base.noop import noop_deserialization
 from dataclasses_serialization.serializer_base.typing import dataclass_field_types
-from dataclasses_serialization.serializer_base.typing import isinstance
+from dataclasses_serialization.serializer_base.typing import is_instance
 
 
 def identity_deserialization_func(key: str) -> str:
@@ -30,7 +30,7 @@ def force_int_deserializer(cls, obj):
     Fail if coercion lossy
     """
 
-    if isinstance(obj, cls):
+    if is_instance(obj, cls):
         return obj
 
     try:
@@ -49,10 +49,10 @@ def force_int_deserializer(cls, obj):
 
 
 def timedelta_deserialize(cls, value: Any) -> timedelta:
-    if isinstance(value, timedelta):
+    if is_instance(value, timedelta):
         return value
 
-    if isinstance(value, int):
+    if is_instance(value, int):
         return timedelta_from_milliseconds(value)
 
     raise DeserializationError(
@@ -61,10 +61,10 @@ def timedelta_deserialize(cls, value: Any) -> timedelta:
 
 
 def number_to_float(cls, value, deserialization_func=noop_deserialization):
-    if isinstance(value, float):
+    if is_instance(value, float):
         return value
 
-    if not isinstance(value, int):
+    if not is_instance(value, int):
         raise DeserializationError(
             "Cannot deserialize {} to float".format(value)
         )
@@ -78,7 +78,7 @@ def dict_to_dataclass(cls,
                       deserialization_func,
                       key_deserialization_func=identity_deserialization_func,
                       serializer=None):
-    if not isinstance(dct, dict):
+    if not is_instance(dct, dict):
         raise DeserializationError(
             "Cannot deserialize {} {!r} using {}".format(
                 type(dct), dct, dict_to_dataclass
@@ -113,7 +113,7 @@ def dict_to_dataclass(cls,
 @curry
 def collection_deserialization(type_, obj, target_collection,
                                deserialization_func=noop_deserialization):
-    if not isinstance(obj, (list, set, tuple)):
+    if not is_instance(obj, (list, set, tuple)):
         raise DeserializationError(
             "Cannot deserialize {} {!r} using collection deserialization".format(
                 type(obj), obj
@@ -163,7 +163,7 @@ def datetime_utc_from_timestamp_ms(millis: int) -> datetime:
 
 
 def datetime_utc_from_inspected_type(data: Union[str, int]) -> datetime:
-    if isinstance(data, int):
+    if is_instance(data, int):
         return datetime_utc_from_timestamp_ms(data)
     else:
         return datetime_utc_from_formatted(data)
@@ -174,7 +174,7 @@ def datetime_utc_from_formatted(date_string: Optional[Union[str, int]], date_for
     if date_string is None:
         return None
 
-    if isinstance(date_string, numbers.Number):
+    if is_instance(date_string, numbers.Number):
         return datetime_utc_from_timestamp_ms(date_string)
 
     return datetime.strptime(date_string, date_format).replace(tzinfo=timezone.utc)

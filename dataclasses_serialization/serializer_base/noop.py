@@ -1,7 +1,7 @@
 from toolz import curry
 
 from dataclasses_serialization.serializer_base.errors import DeserializationError
-from dataclasses_serialization.serializer_base.typing import isinstance
+from dataclasses_serialization.serializer_base.typing import is_instance
 
 __all__ = ["noop_serialization", "noop_deserialization"]
 
@@ -12,7 +12,7 @@ def noop_serialization(obj):
 
 @curry
 def noop_deserialization(cls, obj):
-    if not isinstance(obj, cls):
+    if not is_instance(obj, cls):
         raise DeserializationError(
             "Cannot deserialize {} {!r} to type {}".format(type(obj), obj, cls)
         )

@@ -10,7 +10,7 @@ from dataclasses_serialization.serializer_base.errors import (
     SerializationError,
 )
 from dataclasses_serialization.serializer_base.refinement_dict import RefinementDict
-from dataclasses_serialization.serializer_base.typing import isinstance, issubclass
+from dataclasses_serialization.serializer_base.typing import is_instance, is_subclass
 from dataclasses_serialization.serializer_base.union import union_deserialization
 
 __all__ = ["Serializer"]
@@ -23,10 +23,10 @@ class Serializer:
 
     def __init__(self, serialization_functions: dict, deserialization_functions: dict):
         self.serialization_functions = RefinementDict(
-            serialization_functions, is_subset=issubclass, is_element=isinstance
+            serialization_functions, is_subset=is_subclass, is_element=is_instance
         )
         self.deserialization_functions = RefinementDict(
-            deserialization_functions, is_subset=issubclass, is_element=issubclass
+            deserialization_functions, is_subset=is_subclass, is_element=is_subclass
         )
 
         self.serialization_functions.setdefault(

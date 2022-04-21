@@ -4,7 +4,7 @@ from dataclasses_serialization.serializer_base.errors import DeserializationErro
 from dataclasses_serialization.serializer_base.noop import noop_deserialization
 from dataclasses_serialization.serializer_base.typing import (
     dataclass_field_types,
-    isinstance,
+    is_instance,
 )
 
 __all__ = ["dict_to_dataclass"]
@@ -12,7 +12,7 @@ __all__ = ["dict_to_dataclass"]
 
 @curry
 def dict_to_dataclass(cls, dct, deserialization_func=noop_deserialization):
-    if not isinstance(dct, dict):
+    if not is_instance(dct, dict):
         raise DeserializationError(
             "Cannot deserialize {} {!r} using {}".format(
                 type(dct), dct, dict_to_dataclass

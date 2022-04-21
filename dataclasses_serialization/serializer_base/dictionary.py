@@ -13,7 +13,7 @@ from dataclasses_serialization.serializer_base.noop import (
     noop_serialization,
 )
 from dataclasses_serialization.serializer_base.typing import (
-    isinstance,
+    is_instance,
     register_generic_isinstance,
 )
 
@@ -26,12 +26,12 @@ get_args = partial(get_args, evaluate=True)
 @register_generic_isinstance(Dict)
 def dict_isinstance(o, t):
     if t is Dict:
-        return isinstance(o, dict)
+        return is_instance(o, dict)
 
     key_type, value_type = get_args(t)
 
-    return isinstance(o, dict) and all(
-        isinstance(key, key_type) and isinstance(value, value_type)
+    return is_instance(o, dict) and all(
+        is_instance(key, key_type) and is_instance(value, value_type)
         for key, value in o.items()
     )
 
@@ -42,7 +42,7 @@ def dict_serialization(
         key_serialization_func=noop_serialization,
         value_serialization_func=noop_serialization,
 ):
-    if not isinstance(obj, dict):
+    if not is_instance(obj, dict):
         raise SerializationError(
             "Cannot serialize {} {!r} using dict serialization".format(type(obj), obj)
         )
@@ -60,7 +60,7 @@ def dict_deserialization(
         key_deserialization_func=noop_deserialization,
         value_deserialization_func=noop_deserialization,
 ):
-    if not isinstance(obj, dict):
+    if not is_instance(obj, dict):
         raise DeserializationError(
             "Cannot deserialize {} {!r} using dict deserialization".format(
                 type(obj), obj

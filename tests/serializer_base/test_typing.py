@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Dict, Iterable, TypeVar, Union
 from unittest import TestCase
 
-from dataclasses_serialization.serializer_base import isinstance, issubclass
+from dataclasses_serialization.serializer_base import is_instance, is_subclass
 
 
 class TestTyping(TestCase):
@@ -27,7 +27,7 @@ class TestTyping(TestCase):
 
         for obj, type_ in positive_test_cases:
             with self.subTest(obj=obj, type_=type_):
-                self.assertTrue(isinstance(obj, type_))
+                self.assertTrue(is_instance(obj, type_))
 
         negative_test_cases = [
             (1, str),
@@ -42,7 +42,7 @@ class TestTyping(TestCase):
 
         for obj, type_ in negative_test_cases:
             with self.subTest(obj=obj, type_=type_):
-                self.assertFalse(isinstance(obj, type_))
+                self.assertFalse(is_instance(obj, type_))
 
     def test_issubclass(self):
         @dataclass
@@ -63,7 +63,7 @@ class TestTyping(TestCase):
 
         for cls, supercls in positive_test_cases:
             with self.subTest(cls=cls, supercls=supercls):
-                self.assertTrue(issubclass(cls, supercls))
+                self.assertTrue(is_subclass(cls, supercls))
 
         negative_test_cases = [
             (int, str),
@@ -76,4 +76,4 @@ class TestTyping(TestCase):
 
         for cls, supercls in negative_test_cases:
             with self.subTest(cls=cls, supercls=supercls):
-                self.assertFalse(issubclass(cls, supercls))
+                self.assertFalse(is_subclass(cls, supercls))
