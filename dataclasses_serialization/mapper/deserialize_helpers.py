@@ -23,7 +23,7 @@ def timedelta_from_milliseconds(value: int) -> timedelta:
 
 def force_int_deserializer(cls, obj):
     """
-    Implicitly converts ints to floats
+    Explicitly converts ints to floats
 
     Attempt to coerce back
     Fail if coercion lossy
@@ -59,16 +59,19 @@ def timedelta_deserialize(cls, value: Any) -> timedelta:
     )
 
 
-def number_to_float(cls, value, deserialization_func=noop_deserialization):
+def number_to_float(cls, value) -> float:
+    """
+    Force serializing numbers as floats.
+    """
     if is_instance(value, float):
         return value
 
-    if not is_instance(value, int):
+    try:
+        return float(value)
+    except Exception:
         raise DeserializationError(
             "Cannot deserialize {} to float".format(value)
         )
-
-    return float(value)
 
 
 @curry
@@ -127,8 +130,6 @@ def collection_deserialization(type_, obj, target_collection,
     value_type = argument_types[0]
 
     return target_collection([deserialization_func(value_type, value) for value in obj])
-
-
 
 
 def datetime_utc_from_timestamp_ms(millis: int) -> datetime:

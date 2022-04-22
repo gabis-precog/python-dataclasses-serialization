@@ -4,7 +4,6 @@ from typing import Union, Optional, TypeVar, Type, Any
 from toolz import curry
 
 from dataclasses_serialization.mapper.argument_helpers import merge_lazy_dicts
-from dataclasses_serialization.mapper.defaults import default_serializers, default_deserializers
 from dataclasses_serialization.mapper.typing import SerializerMap
 from dataclasses_serialization.serializer_base import Serializer as BaseSerialize
 from dataclasses_serialization.serializer_base.noop import identity
@@ -16,9 +15,14 @@ T = TypeVar('T')
 
 
 class Mapper(BaseSerialize):
+    """
+    Base mapper class without any specific serializers/deserializers registered.
+
+    Unless you want to customize things from scratch, use one of the subclasses (eg. JsonMapper).
+    """
     def __init__(self,
-                 serialization_functions: Optional[SerializerMap] = default_serializers,
-                 deserialization_functions: Optional[SerializerMap] = default_deserializers,
+                 serialization_functions: SerializerMap,
+                 deserialization_functions: SerializerMap,
                  key_serializer=identity,
                  key_deserializer=identity
                  ):

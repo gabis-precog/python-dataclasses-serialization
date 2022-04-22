@@ -4,7 +4,7 @@ from typing import Any
 from dateutil.relativedelta import relativedelta
 
 from dataclasses_serialization.mapper.deserialize_helpers import timedelta_from_milliseconds
-from dataclasses_serialization.mapper.serializer_helpers import timedelta_to_milliseconds
+from dataclasses_serialization.mapper.serialize_helpers import timedelta_to_milliseconds
 from dataclasses_serialization.serializer_base.errors import DeserializationError
 
 

@@ -61,7 +61,7 @@ html_sidebars = {
     '**': ['globaltoc.html', 'relations.html', 'sourcelink.html', 'searchbox.html'],
 }
 
-# html_css_files = ['theme_override.css']
+html_css_files = ['theme_override.css']
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,

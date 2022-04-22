@@ -16,6 +16,9 @@ def datetime_to_milliseconds(item: datetime) -> int:
 
 
 def float_serializer(value: float) -> Optional[float]:
+    """
+    returns None if nan or infinity. Otherwise, returns the value itself.
+    """
     if isinstance(value, float):
         if isnan(value):
             return None

@@ -1,3 +1,7 @@
 .descclassname {
-    display: none
+    opacity: 30%;
+}
+
+.descclassname:hover {
+    opacity: 100%;
 }
