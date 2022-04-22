@@ -31,7 +31,7 @@ relativedelta(days=+4, minutes=+5)
 Numpy
 -----
 
-Support for mapping relativedelta fields to and from milliseconds. Example usage:
+Support for mapping some numpy types. Example usage:
 
 >>> from dataclasses_serialization.extensions.numpy_helpers import (numpy_serializers,
 ...                                                                 numpy_deserializers)
