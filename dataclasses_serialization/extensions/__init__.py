@@ -1,6 +1,4 @@
 """
-Extensions
-==========
 
 Extensions are available to handle some non-native data types:
  - dateutil

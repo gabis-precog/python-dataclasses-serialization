@@ -5,4 +5,4 @@ Customize mapping
    :toctree: generated
 
 .. automodule:: dataclasses_serialization.mapper.defaults
-   :members:
+

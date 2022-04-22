@@ -1,6 +1,4 @@
 """
-Customize mapping
-=================
 
 To create a custom mapper, create an instance of `dataclasses_serialization.mapper.json_mapper.JsonMapper`.
 The mapping can be either overridden, or expand on the defaults.

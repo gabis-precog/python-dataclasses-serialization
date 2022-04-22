@@ -59,15 +59,22 @@ def relativedelta_deserialize(cls, value: Any) -> relativedelta:
     )
 
 
+def dateutil_serializers(mapper):
+    """
+    serializers for timedelta and relativedelta
+    """
+    return {
+        timedelta: timedelta_to_milliseconds,
+        relativedelta: relativedelta_to_milliseconds
+    }
+
+
 def dateutil_deserializers(mapper):
+    """
+    deserializers for timedelta and relativedelta
+    """
     return {
         timedelta: timedelta_deserialize,
         relativedelta: relativedelta_deserialize
     }
 
-
-def dateutil_serializers(mapper):
-    return {
-        timedelta: timedelta_to_milliseconds,
-        relativedelta: relativedelta_to_milliseconds
-    }
