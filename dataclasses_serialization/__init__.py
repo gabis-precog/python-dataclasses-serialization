@@ -1,9 +1,9 @@
 """
-# dataclasses_serialization
 
 `dataclasses_serialization` provides serializers/deserializers for transforming between Python dataclasses, and JSON and BSON objects.
 
-## Basic Usage
+Basic Usage
+===========
 
 Suppose we have the following dataclass:
 
@@ -30,7 +30,8 @@ and deserialize:
 InventoryItem(name='Apple', unit_price=0.2, quantity_on_hand=20)
 
 
-## Custom Serializers
+Custom Serializers
+==================
 
 To create a custom mapper, create an instance of `dataclasses_serialization.mapper.json_mapper.JsonMapper`.
 The mapping can be either overridden, or expand on the defaults.
@@ -59,6 +60,7 @@ and `dataclasses_serialization.mapper.mapper.Mapper.register_deserializers` with
 ...        (str, int, float, bool, type(None)): noop_deserialization
 ...    }
 ...  )
+
 
 """
 
