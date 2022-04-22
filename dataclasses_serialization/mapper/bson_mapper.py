@@ -15,6 +15,10 @@ __all__ = ['BsonMapper']
 
 
 class BsonMapper(Mapper):
+    """
+    Mapper with sane defaults for bson de/serializing.
+    """
+
     def __init__(self,
                  serialization_functions: Optional[SerializerMap] = _default,
                  deserialization_functions: Optional[SerializerMap] = _default,

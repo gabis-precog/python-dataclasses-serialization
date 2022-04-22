@@ -1,45 +1,7 @@
 """
+Default set of serializer/deserializers for python primitives (dataclass, collections, numeric primitives etc.)
 
-To create a custom mapper, create an instance of `dataclasses_serialization.mapper.json_mapper.JsonMapper`.
-The mapping can be either overridden, or expand on the defaults.
-
->>> from dataclasses_serialization.mapper.mapper import Mapper
->>> from dataclasses_serialization.mapper.json_mapper import JsonMapper
->>> from dataclasses_serialization.serializer_base import (
-...             noop_serialization, noop_deserialization, dict_serialization,
-...             dict_deserialization, list_deserialization
-...           )
-
-To override the defaults completely, pass new values to **serialization_functions** and **deserialization_functions** arguments.
-To leave the defaults, instantiate a JsonMapper, and supply `dataclasses_serialization.mapper.mapper.Mapper.register_serializers`
-and `dataclasses_serialization.mapper.mapper.Mapper.register_deserializers` with the new mapping methods:
-
->>> custom_mapper = Mapper(
-...    serialization_functions=lambda mapper: {
-...        list: (lambda lst: list(map(mapper.serialize, lst))),
-...        (str, int, float, bool, type(None)): noop_serialization
-...    },
-...    deserialization_functions=lambda mapper: {
-...        list: (lambda cls, lst: list_deserialization(cls, lst, deserialization_func=mapper.deserialize)),
-...        (str, int, float, bool, type(None)): noop_deserialization
-...    }
-...  )
-
-To add or override the existing defaults use the **register** methods:
-
-**register_deserializers**:
-
->>> from dataclasses_serialization.mapper.deserialize_helpers import force_int_deserializer
->>> mapper = Mapper().register_deserializers({int:force_int_deserializer})
->>> mapper.deserialize(int, 5.0)
-5
-
-**register_serializers**:
-
->>> from dataclasses_serialization.mapper.deserialize_helpers import force_int_deserializer
->>> mapper = Mapper().register_serializers({int:float})
->>> mapper.serialize(5)
-5.0
+These are the defaults used in JsonMapper and BsonMapper.
 """
 
 from dataclasses import dataclass
@@ -61,6 +23,9 @@ __all__ = [
 
 
 def default_serializers(mapper) -> dict:
+    """
+    Set of default serializers useful as a base for json/bson
+    """
     return {
         dataclass: lambda value: mapper.serialize(
             keep_not_none_value(dict_serialization(value.__dict__, key_serialization_func=mapper._key_serializer))),
@@ -81,6 +46,9 @@ def default_serializers(mapper) -> dict:
 
 
 def default_deserializers(mapper) -> dict:
+    """
+    Set of default deserializers useful as a base for json/bson
+    """
     return {
         timedelta: timedelta_deserialize,
         datetime: lambda cls, value: datetime_utc_from_inspected_type(value),

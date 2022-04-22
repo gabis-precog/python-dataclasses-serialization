@@ -25,7 +25,6 @@ author = 'gabis@precog.co'
 # The full version, including alpha/beta/rc tags
 release = '1.4.0'
 
-
 # -- General configuration ---------------------------------------------------
 
 # Add any Sphinx extension module names here, as strings. They can be
@@ -46,7 +45,6 @@ templates_path = ['_templates']
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
-
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
@@ -58,7 +56,6 @@ if on_rtd:
     html_theme = 'default'
 else:
     html_theme = 'sphinx_rtd_theme'
-
 
 html_sidebars = {
     '**': ['globaltoc.html', 'relations.html', 'sourcelink.html', 'searchbox.html'],
@@ -73,3 +70,6 @@ html_static_path = ['_static']
 
 autodoc_default_flags = ['members']
 autosummary_generate = True
+autodoc_typehints = 'description'
+autodoc_typehints_format = 'short'
+

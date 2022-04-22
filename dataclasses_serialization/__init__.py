@@ -1,8 +1,5 @@
 """
 
-Basic Usage
-===========
-
 Suppose we have the following dataclass:
 
 >>> from dataclasses import dataclass
