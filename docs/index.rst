@@ -11,6 +11,7 @@ Dataclasses Serialization
 
    customize
    extensions
+   changelog
 
 .. autosummary::
    :toctree: generated
