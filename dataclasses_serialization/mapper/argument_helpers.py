@@ -19,9 +19,6 @@ def merge_lazy_dicts(mapper,
         if single_dict is None:
             single_dict = {}
 
-        try:
-            resolved_dicts = {**resolved_dicts, **single_dict}
-        except Exception as exception:
-            print(single_dict)
+        resolved_dicts = {**resolved_dicts, **single_dict}
 
     return resolved_dicts

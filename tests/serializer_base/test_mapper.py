@@ -61,3 +61,18 @@ class TestMapper:
         deserialized = self._mapper.deserialize(frozenset, serialized)
 
         assert value == deserialized
+
+    def test_to_json(self):
+        sample = SampleModelTyping('abc', {'a': 'b'}, [1, 2, 3], 4, 'dfg')
+        result = self._mapper.to_json(sample)
+
+        assert result == '{"simple_value": "abc", "another_value": {"a": "b"}, ' \
+                         '"more_values": [1, 2, 3], "yet_another_value": 4, "ml_model": "dfg"}'
+
+    def test_from_json(self):
+        sample = '{"simple_value": "abc", "another_value": {"a": "b"}, ' \
+                  '"more_values": [1, 2, 3], "yet_another_value": 4, "ml_model": "dfg"}'
+
+        result = self._mapper.from_json(SampleModelTyping, sample)
+
+        assert result == SampleModelTyping('abc', {'a': 'b'}, [1, 2, 3], 4, 'dfg')

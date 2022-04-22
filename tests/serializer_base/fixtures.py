@@ -7,6 +7,9 @@ from typing import Dict, List, Optional
 class SampleSubModel:
     a_value: str
 
+    def __eq__(self, o: object) -> bool:
+        return self.__dict__ == o.__dict__
+
 
 @dataclass(frozen=True)
 class SampleModelTyping:

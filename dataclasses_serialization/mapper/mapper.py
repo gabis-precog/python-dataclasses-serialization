@@ -48,11 +48,11 @@ class Mapper(BaseSerialize):
         return super().deserialize(cls, serialized_obj)
 
     @curry
-    def from_json(self, cls: Type[T], data: Union[str, bytes]) -> Optional[T]:
-        return self.deserialize(cls, json.loads(data))
+    def from_json(self, cls: Type[T], data: Union[str, bytes], **kwargs) -> Optional[T]:
+        return self.deserialize(cls, json.loads(data, **kwargs))
 
-    def to_json(self, data: Any) -> str:
-        return json.dumps(self.serialize(data))
+    def to_json(self, data: Any, **kwargs) -> str:
+        return json.dumps(self.serialize(data), **kwargs)
 
     def register_serializers(self, serializers: SerializerMap):
         """
