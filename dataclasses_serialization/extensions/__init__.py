@@ -3,9 +3,9 @@ Extensions
 ==========
 
 Extensions are available to handle some non-native data types:
-- dateutil
-- key_mapping
-- numpy
+ - dateutil
+ - key_mapping
+ - numpy
 
 Install using the pip extensions mechanism.
 
