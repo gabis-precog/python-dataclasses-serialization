@@ -4,12 +4,12 @@ from typing import Any
 from dateutil.relativedelta import relativedelta
 
 from dataclasses_serialization.mapper.deserialize_helpers import timedelta_from_milliseconds
+from dataclasses_serialization.mapper.serializer_helpers import timedelta_to_milliseconds
 from dataclasses_serialization.serializer_base.errors import DeserializationError
-from dataclasses_serialization.serializer_base.typing import is_instance
 
 
 def relativedelta_to_timedelta(relative_delta: relativedelta) -> timedelta:
-    if is_instance(relative_delta, timedelta):
+    if isinstance(relative_delta, timedelta):
         return relative_delta
 
     normalized = relative_delta.normalized()
@@ -25,13 +25,13 @@ def relativedelta_to_timedelta(relative_delta: relativedelta) -> timedelta:
 
 
 def timedelta_deserialize(cls, value: Any) -> timedelta:
-    if is_instance(value, timedelta):
+    if isinstance(value, timedelta):
         return value
 
-    if is_instance(value, int):
+    if isinstance(value, int):
         return timedelta_from_milliseconds(value)
 
-    if is_instance(value, relativedelta):
+    if isinstance(value, relativedelta):
         return relativedelta_to_timedelta(value)
 
     raise DeserializationError(
@@ -39,23 +39,20 @@ def timedelta_deserialize(cls, value: Any) -> timedelta:
     )
 
 
-def relativedelta_from_milliseconds(value):
+def relativedelta_from_milliseconds(value: int):
     return relativedelta(microseconds=value * 1000)
 
 
-def relativedelta_from_timedelta(value):
-    pass
+def relativedelta_to_milliseconds(value: relativedelta) -> int:
+    return timedelta_to_milliseconds(relativedelta_to_timedelta(value))
 
 
-def relativedelta_deserialize(cls, value: Any) -> timedelta:
-    if is_instance(value, relativedelta):
+def relativedelta_deserialize(cls, value: Any) -> relativedelta:
+    if isinstance(value, relativedelta):
         return value
 
-    if is_instance(value, int):
+    if isinstance(value, int):
         return relativedelta_from_milliseconds(value)
-
-    if is_instance(value, timedelta):
-        return relativedelta_from_timedelta(value)
 
     raise DeserializationError(
         "Cannot deserialize {} to timedelta".format(value)
@@ -66,4 +63,11 @@ def dateutil_deserializers(mapper):
     return {
         timedelta: timedelta_deserialize,
         relativedelta: relativedelta_deserialize
+    }
+
+
+def dateutil_serializers(mapper):
+    return {
+        timedelta: timedelta_to_milliseconds,
+        relativedelta: relativedelta_to_milliseconds
     }

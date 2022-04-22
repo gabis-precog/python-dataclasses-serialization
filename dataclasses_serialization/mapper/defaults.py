@@ -16,7 +16,7 @@ __all__ = [
 ]
 
 
-def default_serializers(mapper):
+def default_serializers(mapper) -> dict:
     return {
         dataclass: lambda value: mapper.serialize(
             keep_not_none_value(dict_serialization(value.__dict__, key_serialization_func=mapper._key_serializer))),
@@ -36,7 +36,7 @@ def default_serializers(mapper):
     }
 
 
-def default_deserializers(mapper):
+def default_deserializers(mapper) -> dict:
     return {
         timedelta: timedelta_deserialize,
         datetime: lambda cls, value: datetime_utc_from_inspected_type(value),
@@ -58,3 +58,22 @@ def default_deserializers(mapper):
         Path: lambda cls, value: Path(value),
         type(None): noop_deserialization
     }
+
+
+def build_init_arguments(serialization_functions,
+                         deserialization_functions,
+                         key_serializer,
+                         key_deserializer,
+                         default_marker):
+    init_kwargs = dict(
+        key_serializer=key_serializer,
+        key_deserializer=key_deserializer
+    )
+
+    if serialization_functions is not default_marker:
+        init_kwargs['serialization_functions'] = serialization_functions
+
+    if deserialization_functions is not default_marker:
+        init_kwargs['deserialization_functions'] = deserialization_functions
+
+    return init_kwargs
