@@ -3,7 +3,7 @@
 `dataclasses_serialization` provides serializers/deserializers for transforming between Python dataclasses, and JSON and BSON objects.
 
 .. note::
-   This documentation is for the fork at https://github.com/gabis-precog/python-dataclasses-serialization
+   This documentation is for the fork at https://github.com/gabis-precog/python-dataclasses-serialization.
    This project is (or aims to be) backwards compatible with the original project, So some documentation
    here may apply to (and is based on the documentation of) the original.
 
