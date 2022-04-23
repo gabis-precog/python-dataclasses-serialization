@@ -1,4 +1,3 @@
-from functools import partial
 from typing import Dict
 
 from toolz import curry, identity
@@ -19,8 +18,6 @@ from dataclasses_serialization.serializer_base.typing import (
 
 __all__ = ["dict_serialization", "dict_deserialization"]
 
-get_args = partial(get_args, evaluate=True)
-
 
 @register_generic_isinstance(dict)
 @register_generic_isinstance(Dict)
@@ -28,7 +25,7 @@ def dict_isinstance(o, t):
     if t is Dict:
         return is_instance(o, dict)
 
-    key_type, value_type = get_args(t)
+    key_type, value_type = get_args(t, evaluate=True)
 
     return is_instance(o, dict) and all(
         is_instance(key, key_type) and is_instance(value, value_type)
@@ -70,7 +67,7 @@ def dict_deserialization(
     if type_ is dict or type_ is Dict:
         return obj
 
-    key_type, value_type = get_args(type_)
+    key_type, value_type = get_args(type_, evaluate=True)
 
     return {
         key_deserialization_func(key_type, key): value_deserialization_func(

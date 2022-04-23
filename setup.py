@@ -63,7 +63,8 @@ setup(
     extras_require={
         'dateutil': {'python-dateutil >= 2.8.0'},
         'key_mapping': {'pydash >= 5.0.0'},
-        'numpy': {'numpy >= 1.22.0'}
+        'numpy': {'numpy >= 1.22.0'},
+        'attrs': {'attrs'}
     },
     description="Serialize/deserialize Python dataclasses to various other data formats",
     long_description=get_long_description(),

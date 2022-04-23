@@ -1,4 +1,3 @@
-from functools import partial
 from typing import Union
 
 from toolz import curry
@@ -10,7 +9,6 @@ from dataclasses_serialization.serializer_base.typing import register_generic_is
 
 __all__ = ["union_deserialization"]
 
-get_args = partial(get_args, evaluate=True)
 
 
 @register_generic_issubclass(Union)
@@ -20,7 +18,7 @@ def union_issubclass(cls, classinfo):
 
 @curry
 def union_deserialization(type_, obj, deserialization_func=noop_deserialization):
-    for arg in get_args(type_):
+    for arg in get_args(type_, evaluate=True):
         try:
             return deserialization_func(arg, obj)
         except DeserializationError:

@@ -1,7 +1,7 @@
+import inspect
 import sys
 import types
 from dataclasses import dataclass, fields, is_dataclass
-from functools import partial
 from typing import TypeVar, get_type_hints
 
 from toolz import curry
@@ -32,12 +32,15 @@ __all__ = [
     "register_generic_isinstance",
     "register_generic_issubclass",
     "dataclass_field_types",
+    'register_extension_isinstance',
+    'register_extension_issubclass'
 ]
-
-get_args = partial(get_args, evaluate=True)
 
 isinstance_generic_funcs = {}
 issubclass_generic_funcs = {}
+
+isinstance_extension_funcs = {}
+issubclass_extension_funcs = {}
 
 
 @curry
@@ -54,15 +57,33 @@ def register_generic_issubclass(origin, func):
     return func
 
 
-def is_instance(o, t):
-    if t is dataclass:
-        return not isinstance(o, type) and is_dataclass(o)
+@curry
+def register_extension_isinstance(origin, func):
+    isinstance_extension_funcs[origin] = func
 
-    t_origin = get_origin(t)
+    return func
+
+
+@curry
+def register_extension_issubclass(origin, func):
+    issubclass_extension_funcs[origin] = func
+
+    return func
+
+
+def is_instance(obj, type_):
+    if type_ is dataclass:
+        return not isinstance(obj, type) and is_dataclass(obj)
+
+    if type_ in isinstance_extension_funcs:
+        return isinstance_extension_funcs[type_](obj, type_)
+
+    t_origin = get_origin(type_)
+
     if t_origin in isinstance_generic_funcs:
-        return isinstance_generic_funcs[t_origin](o, t)
+        return isinstance_generic_funcs[t_origin](obj, type_)
 
-    return isinstance(o, t)
+    return isinstance(obj, type_)
 
 
 def is_subclass(cls, classinfo):
@@ -76,6 +97,9 @@ def is_subclass(cls, classinfo):
         origin = get_origin(cls)
         bases = get_generic_bases(origin) or (origin,)
         return classinfo in bases
+
+    if classinfo in isinstance_extension_funcs:
+        return isinstance_extension_funcs[classinfo](cls, classinfo)
 
     classinfo_origin = get_origin(classinfo)
 
@@ -92,7 +116,10 @@ def is_subclass(cls, classinfo):
     if not isinstance(cls, type):
         return False
 
-    return issubclass(cls, classinfo)
+    if not inspect.ismodule(classinfo):
+        return issubclass(cls, classinfo)
+
+    return False
 
 
 @curry
@@ -118,7 +145,7 @@ def dataclass_field_types(cls, require_bound=False):
         raise TypeError("Cannot find types of unbound generic {}".format(cls))
 
     origin = get_origin(cls)
-    type_mapping = dict(zip(origin.__parameters__, get_args(cls)))
+    type_mapping = dict(zip(origin.__parameters__, get_args(cls, evaluate=True)))
 
     type_hints = get_type_hints(origin)
     flds = fields(origin)
