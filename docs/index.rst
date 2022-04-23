@@ -23,6 +23,7 @@ Dataclasses Serialization
 and JSON and BSON objects.
 
 Brief supported features summary:
+
 - dataclasses
 - attrs classes
 - python native types (including Enums)
