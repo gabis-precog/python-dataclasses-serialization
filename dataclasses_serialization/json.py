@@ -1,5 +1,7 @@
 import json
 
+from deprecated import deprecated
+
 from dataclasses_serialization.serializer_base import (noop_serialization, noop_deserialization, dict_serialization,
                                                        dict_deserialization, list_deserialization, Serializer)
 
@@ -10,7 +12,7 @@ __all__ = [
     "JSONStrSerializerMixin"
 ]
 
-JSONSerializer = Serializer(
+JSONSerializer = deprecated(version='1.4.0', reason='Use JsonMapper')(Serializer)(
     serialization_functions={
         dict: lambda dct: dict_serialization(dct, key_serialization_func=JSONSerializer.serialize,
                                              value_serialization_func=JSONSerializer.serialize),
@@ -26,6 +28,7 @@ JSONSerializer = Serializer(
 )
 
 
+@deprecated(version='1.4.0', reason='Use mixin factory json_serializer_mixin')
 class JSONSerializerMixin:
     def as_json(self):
         return JSONSerializer.serialize(self)
@@ -45,6 +48,7 @@ JSONStrSerializer = Serializer(
 )
 
 
+@deprecated(version='1.4.0', reason='Use mixin factory json_str_serializer_mixin')
 class JSONStrSerializerMixin:
     def as_json_str(self):
         return JSONStrSerializer.serialize(self)

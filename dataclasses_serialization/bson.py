@@ -1,5 +1,7 @@
 from datetime import datetime
 
+from deprecated import deprecated
+
 from dataclasses_serialization.serializer_base import (is_instance, noop_serialization, noop_deserialization,
                                                        dict_serialization, dict_deserialization, list_deserialization,
                                                        Serializer, DeserializationError)
@@ -54,7 +56,7 @@ def bson_int_deserializer(cls, obj):
     ))
 
 
-BSONSerializer = Serializer(
+BSONSerializer = deprecated(version='1.4.0', reason='Use BsonMapper')(Serializer)(
     serialization_functions={
         dict: lambda dct: dict_serialization(dct, key_serialization_func=BSONSerializer.serialize,
                                              value_serialization_func=BSONSerializer.serialize),
@@ -72,6 +74,7 @@ BSONSerializer = Serializer(
 )
 
 
+@deprecated(version='1.4.0', reason='Use mixin factory json_str_serializer_mixin')
 class BSONSerializerMixin:
     def as_bson(self):
         return BSONSerializer.serialize(self)
@@ -91,6 +94,7 @@ BSONStrSerializer = Serializer(
 )
 
 
+@deprecated(version='1.4.0', reason='Use mixin factory bson_str_serializer_mixin')
 class BSONStrSerializerMixin:
     def as_bson_str(self):
         return BSONStrSerializer.serialize(self)

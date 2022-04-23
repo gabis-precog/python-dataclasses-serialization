@@ -1,13 +1,13 @@
 from typing import Optional
 
 import bson
+from toolz import identity
 
-from dataclasses_serialization.bson import bson_int_deserializer
 from dataclasses_serialization.mapper.defaults import build_init_arguments, default_deserializers, default_serializers
+from dataclasses_serialization.mapper.deserialize_helpers import force_int_deserializer
 from dataclasses_serialization.mapper.mapper import Mapper
 from dataclasses_serialization.mapper.typing import SerializerMap
 from dataclasses_serialization.serializer_base import noop_deserialization, noop_serialization
-from toolz import identity
 
 __all__ = ['BsonMapper']
 
@@ -35,4 +35,4 @@ class BsonMapper(Mapper):
 
         self.register_serializer(bson.ObjectId, noop_serialization)
         self.register_deserializer(bson.ObjectId, noop_deserialization)
-        self.register_deserializer(int, bson_int_deserializer)
+        self.register_deserializer(int, force_int_deserializer)
