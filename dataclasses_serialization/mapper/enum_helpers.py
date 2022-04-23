@@ -21,13 +21,13 @@ def enum_from_name(enum_class: Type[Enum],
     Deserialize enum from it's name.
 
     Example:
+
     >>> from dataclasses_serialization.mapper.mapper import Mapper
     >>> class SampleEnum(Enum):
     ...     item1 = 'value1'
     ...     item2 = 'value2'
 
     >>> mapper = Mapper().register(SampleEnum, enum_to_name, enum_from_name)
-
     >>> mapper.deserialize(SampleEnum, 'item1')
     <SampleEnum.item1: 'value1'>
     """
@@ -49,13 +49,13 @@ def enum_from_value(enum_class: Type[Enum], value: Optional[str]):
     Deserialize enum from it's value.
 
     Example:
+
     >>> from dataclasses_serialization.mapper.mapper import Mapper
     >>> class SampleEnum(Enum):
     ...     item1 = 'value1'
     ...     item2 = 'value2'
 
     >>> mapper = Mapper().register(SampleEnum, enum_to_value, enum_from_value)
-
     >>> mapper.deserialize(SampleEnum, 'value1')
     <SampleEnum.item1: 'value1'>
     """
@@ -71,13 +71,13 @@ def enum_to_name(item) -> str:
     Serialize enum using it's name.
 
     Example:
+
     >>> from dataclasses_serialization.mapper.mapper import Mapper
     >>> class SampleEnum(Enum):
     ...     item1 = 'value1'
     ...     item2 = 'value2'
 
     >>> mapper = Mapper().register(SampleEnum, enum_to_name, enum_from_name)
-
     >>> mapper.serialize(SampleEnum.item1)
     'item1'
 
@@ -90,13 +90,13 @@ def enum_to_value(item) -> Any:
     Serialize enum using it's value.
 
     Example:
+
     >>> from dataclasses_serialization.mapper.mapper import Mapper
     >>> class SampleEnum(Enum):
     ...     item1 = 'value1'
     ...     item2 = 'value2'
 
     >>> mapper = Mapper().register(SampleEnum, enum_to_value, enum_from_value)
-
     >>> mapper.serialize(SampleEnum.item1)
     'value1'
 
