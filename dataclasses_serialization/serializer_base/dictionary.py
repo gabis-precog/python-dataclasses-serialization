@@ -1,7 +1,7 @@
 from functools import partial
 from typing import Dict
 
-from toolz import curry
+from toolz import curry, identity
 from typing_inspect import get_args
 
 from dataclasses_serialization.serializer_base.errors import (
@@ -41,16 +41,16 @@ def dict_serialization(
         obj,
         key_serialization_func=noop_serialization,
         value_serialization_func=noop_serialization,
+        post_processor=identity
 ):
     if not is_instance(obj, dict):
         raise SerializationError(
             "Cannot serialize {} {!r} using dict serialization".format(type(obj), obj)
         )
 
-    return {
-        key_serialization_func(key): value_serialization_func(value)
-        for key, value in obj.items()
-    }
+    result = {key_serialization_func(key): value_serialization_func(value) for key, value in obj.items()}
+
+    return post_processor(result)
 
 
 @curry

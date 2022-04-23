@@ -4,7 +4,7 @@ from dataclasses_serialization.mapper.defaults import build_init_arguments, defa
 from dataclasses_serialization.mapper.deserialize_helpers import force_int_deserializer
 from dataclasses_serialization.mapper.mapper import Mapper
 from dataclasses_serialization.mapper.typing import SerializerMap
-from dataclasses_serialization.serializer_base.noop import identity
+from toolz import identity
 
 __all__ = [
     'JsonMapper'

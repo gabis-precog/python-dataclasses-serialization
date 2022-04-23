@@ -9,6 +9,8 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from pathlib import PurePath
 
+from toolz import curry
+
 from dataclasses_serialization.mapper.deserialize_helpers import timedelta_deserialize, dict_to_dataclass, \
     collection_deserialization, number_to_float, datetime_utc_from_inspected_type
 from dataclasses_serialization.mapper.serialize_helpers import keep_not_none_value, timedelta_to_milliseconds, \
@@ -22,17 +24,20 @@ __all__ = [
 ]
 
 
-def default_serializers(mapper) -> dict:
+@curry
+def default_serializers(mapper, dict_post_processor=keep_not_none_value) -> dict:
     """
     Set of default serializers useful as a base for json/bson
     """
     return {
-        dataclass: lambda value: mapper.serialize(
-            keep_not_none_value(dict_serialization(value.__dict__, key_serialization_func=mapper._key_serializer))),
-        dict: lambda dct: keep_not_none_value(dict_serialization(
-            dct,
+        dataclass: lambda value: dict_serialization(value.__dict__,
+                                                    key_serialization_func=mapper._key_serializer,
+                                                    value_serialization_func=mapper.serialize,
+                                                    post_processor=dict_post_processor),
+        dict: dict_serialization(
             key_serialization_func=mapper.serialize,
-            value_serialization_func=mapper.serialize)),
+            value_serialization_func=mapper.serialize,
+            post_processor=dict_post_processor),
         datetime: datetime_to_milliseconds,
         (tuple, set, list, frozenset): lambda lst: list(map(mapper.serialize, lst)),
         str: noop_serialization,
@@ -51,9 +56,10 @@ def default_deserializers(mapper) -> dict:
     """
     return {
         timedelta: timedelta_deserialize,
-        datetime: lambda cls, value: datetime_utc_from_inspected_type(value),
-        dataclass: lambda cls, value: dict_to_dataclass(cls, value, mapper.deserialize, mapper._key_deserializer,
-                                                        serializer=mapper),
+        datetime: datetime_utc_from_inspected_type,
+        dataclass: dict_to_dataclass(deserialization_func=mapper.deserialize,
+                                     key_deserialization_func=mapper._key_deserializer,
+                                     serializer=mapper),
         dict: dict_deserialization(key_deserialization_func=mapper.deserialize,
                                    value_deserialization_func=mapper.deserialize),
         list: collection_deserialization(target_collection=list,

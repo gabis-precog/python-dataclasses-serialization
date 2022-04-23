@@ -4,14 +4,9 @@ from dataclasses_serialization.serializer_base.errors import DeserializationErro
 from dataclasses_serialization.serializer_base.typing import is_instance
 
 __all__ = [
-    "identity",
     "noop_serialization",
     "noop_deserialization"
 ]
-
-
-def identity(value):
-    return value
 
 
 def noop_serialization(obj):

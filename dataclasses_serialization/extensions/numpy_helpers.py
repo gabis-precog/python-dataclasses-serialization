@@ -2,6 +2,8 @@ from typing import Dict
 
 import numpy
 
+from dataclasses_serialization.mapper.argument_helpers import any_class_deserializer
+
 
 def numpy_serializers(mapper) -> Dict:
     """
@@ -19,7 +21,7 @@ def numpy_deserializers(mapper) -> Dict:
     deserializers for some numpy types
     """
     return {
-        numpy.bool_: lambda cls, value: numpy.bool_(value),
-        numpy.int64: lambda cls, value: numpy.int64(value),
-        numpy.ndarray: lambda cls, value: numpy.array(value),
+        numpy.bool_: any_class_deserializer(numpy.bool_),
+        numpy.int64: any_class_deserializer(numpy.int64),
+        numpy.ndarray: any_class_deserializer(numpy.array),
     }

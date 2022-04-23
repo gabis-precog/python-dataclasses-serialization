@@ -5,7 +5,7 @@ from pydash import camel_case
 from dataclasses_serialization.mapper.defaults import build_init_arguments
 from dataclasses_serialization.mapper.json_mapper import JsonMapper
 from dataclasses_serialization.mapper.typing import SerializerMap
-from dataclasses_serialization.serializer_base.noop import identity
+from toolz import identity
 
 _default = object()
 

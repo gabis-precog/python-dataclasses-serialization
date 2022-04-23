@@ -1,8 +1,8 @@
 from datetime import timedelta
-from typing import Any
 
 from dateutil.relativedelta import relativedelta
 
+from dataclasses_serialization.mapper.argument_helpers import any_class_deserializer
 from dataclasses_serialization.mapper.serialize_helpers import timedelta_to_milliseconds
 from dataclasses_serialization.serializer_base.errors import DeserializationError
 
@@ -31,7 +31,8 @@ def relativedelta_to_milliseconds(value: relativedelta) -> int:
     return timedelta_to_milliseconds(relativedelta_to_timedelta(value))
 
 
-def relativedelta_deserialize(cls, value: Any) -> relativedelta:
+@any_class_deserializer
+def relativedelta_deserialize(value) -> relativedelta:
     if isinstance(value, relativedelta):
         return value
 
@@ -59,4 +60,3 @@ def dateutil_deserializers(mapper):
     return {
         relativedelta: relativedelta_deserialize
     }
-

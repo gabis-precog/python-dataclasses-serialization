@@ -1,4 +1,3 @@
-import numbers
 from datetime import timedelta, datetime
 from datetime import timezone
 from typing import Any, Union
@@ -7,6 +6,7 @@ from typing import Optional
 from toolz import curry
 from typing_inspect import get_args
 
+from dataclasses_serialization.mapper.argument_helpers import any_class_deserializer
 from dataclasses_serialization.serializer_base.errors import DeserializationError
 from dataclasses_serialization.serializer_base.noop import noop_deserialization
 from dataclasses_serialization.serializer_base.typing import dataclass_field_types
@@ -47,7 +47,8 @@ def force_int_deserializer(cls, obj):
     ))
 
 
-def timedelta_deserialize(cls, value: Any) -> timedelta:
+@any_class_deserializer
+def timedelta_deserialize(value: Any) -> timedelta:
     if isinstance(value, timedelta):
         return value
 
@@ -59,7 +60,8 @@ def timedelta_deserialize(cls, value: Any) -> timedelta:
     )
 
 
-def number_to_float(cls, value) -> float:
+@any_class_deserializer
+def number_to_float(value) -> float:
     """
     Force serializing numbers as floats.
     """
@@ -113,7 +115,9 @@ def dict_to_dataclass(cls,
 
 
 @curry
-def collection_deserialization(type_, obj, target_collection,
+def collection_deserialization(cls,
+                               obj,
+                               target_collection,
                                deserialization_func=noop_deserialization):
     if not is_instance(obj, (list, set, tuple)):
         raise DeserializationError(
@@ -122,7 +126,7 @@ def collection_deserialization(type_, obj, target_collection,
             )
         )
 
-    argument_types = get_args(type_, evaluate=True)
+    argument_types = get_args(cls, evaluate=True)
 
     if len(argument_types) == 0:
         return target_collection(obj)
@@ -132,23 +136,24 @@ def collection_deserialization(type_, obj, target_collection,
     return target_collection([deserialization_func(value_type, value) for value in obj])
 
 
-def datetime_utc_from_timestamp_ms(millis: int) -> datetime:
+@curry
+@any_class_deserializer
+def datetime_utc_from_inspected_type(data: Union[str, int]) -> datetime:
+    if is_instance(data, int):
+        return datetime_utc_from_milliseconds(None, data)
+    else:
+        return datetime_utc_from_formatted(None, data)
+
+
+@any_class_deserializer
+def datetime_utc_from_milliseconds(millis: int) -> datetime:
     return datetime.utcfromtimestamp(millis / 1000)
 
 
-def datetime_utc_from_inspected_type(data: Union[str, int]) -> datetime:
-    if is_instance(data, int):
-        return datetime_utc_from_timestamp_ms(data)
-    else:
-        return datetime_utc_from_formatted(data)
-
-
-def datetime_utc_from_formatted(date_string: Optional[Union[str, int]], date_format: str = '%Y-%m-%d %H:%M:%S') -> \
-        Optional[datetime]:
+@any_class_deserializer
+def datetime_utc_from_formatted(date_string: Optional[Union[str, int]],
+                                date_format: str = '%Y-%m-%d %H:%M:%S') -> Optional[datetime]:
     if date_string is None:
         return None
-
-    if is_instance(date_string, numbers.Number):
-        return datetime_utc_from_timestamp_ms(date_string)
 
     return datetime.strptime(date_string, date_format).replace(tzinfo=timezone.utc)

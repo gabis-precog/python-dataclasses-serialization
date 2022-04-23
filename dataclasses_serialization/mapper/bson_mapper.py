@@ -7,7 +7,7 @@ from dataclasses_serialization.mapper.defaults import build_init_arguments, defa
 from dataclasses_serialization.mapper.mapper import Mapper
 from dataclasses_serialization.mapper.typing import SerializerMap
 from dataclasses_serialization.serializer_base import noop_deserialization, noop_serialization
-from dataclasses_serialization.serializer_base.noop import identity
+from toolz import identity
 
 __all__ = ['BsonMapper']
 

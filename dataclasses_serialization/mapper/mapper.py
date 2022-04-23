@@ -6,7 +6,7 @@ from toolz import curry
 from dataclasses_serialization.mapper.argument_helpers import merge_lazy_dicts
 from dataclasses_serialization.mapper.typing import SerializerMap
 from dataclasses_serialization.serializer_base import Serializer as BaseSerialize
-from dataclasses_serialization.serializer_base.noop import identity
+from toolz import identity
 from dataclasses_serialization.serializer_base.typing import dataclass_field_types
 
 __all__ = ['Mapper']
