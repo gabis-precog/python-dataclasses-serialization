@@ -1,5 +1,6 @@
 from collections import Counter
-from datetime import timedelta
+from datetime import timedelta, datetime, timezone
+from math import nan, inf
 from typing import List
 
 import pytest
@@ -24,10 +25,23 @@ class TestMapper:
 
         assert actual == [1, 3, 4]
 
-    def test_deserialize_number_to_float(self):
-        assert self._mapper.deserialize(float, 5) == 5.0
-        assert self._mapper.deserialize(float, 5.0) == 5.0
+    @pytest.mark.parametrize('value, expected', (
+            (5, 5.0),
+            (5.5, 5.5),
+    ))
+    def test_deserialize_number_to_float(self, value, expected):
+        assert self._mapper.deserialize(float, value) == expected
 
+    @pytest.mark.parametrize('value, expected', (
+            (5, 5.0),
+            (5.5, 5.5),
+            (nan, None),
+            (inf, None),
+    ))
+    def test_serialize_number_to_float(self, value, expected):
+        assert self._mapper.serialize(value) == expected
+
+    def test_fail_deserialize_number_to_float(self):
         with pytest.raises(DeserializationError):
             self._mapper.deserialize(float, 'abc')
 
@@ -63,16 +77,24 @@ class TestMapper:
         assert value == deserialized
 
     def test_to_json(self):
-        sample = SampleModelTyping('abc', {'a': 'b'}, [1, 2, 3], 4, 'dfg')
+        sample = SampleModelTyping('abc', {'a': 'b'}, [1, 2, 3], 4, 'dfg',
+                                   decimal=5.6,
+                                   created_at=datetime(2000, 1, 2, 3, 4, 5, tzinfo=timezone.utc),
+                                   delta=timedelta(minutes=50))
         result = self._mapper.to_json(sample)
 
         assert result == '{"simple_value": "abc", "another_value": {"a": "b"}, ' \
-                         '"more_values": [1, 2, 3], "yet_another_value": 4, "ml_model": "dfg"}'
+                         '"more_values": [1, 2, 3], "yet_another_value": 4, ' \
+                         '"ml_model": "dfg", "decimal": 5.6, "created_at": 946782245000, "delta": 3000000}'
 
     def test_from_json(self):
         sample = '{"simple_value": "abc", "another_value": {"a": "b"}, ' \
-                  '"more_values": [1, 2, 3], "yet_another_value": 4, "ml_model": "dfg"}'
+                 '"more_values": [1, 2, 3], "yet_another_value": 4, ' \
+                 '"ml_model": "dfg", "decimal": 5.6, "created_at": 946782245000, "delta": 3000000}'
 
         result = self._mapper.from_json(SampleModelTyping, sample)
 
-        assert result == SampleModelTyping('abc', {'a': 'b'}, [1, 2, 3], 4, 'dfg')
+        assert result == SampleModelTyping('abc', {'a': 'b'}, [1, 2, 3], 4, 'dfg',
+                                           decimal=5.6,
+                                           created_at=datetime(2000, 1, 2, 3, 4, 5, tzinfo=timezone.utc),
+                                           delta=timedelta(minutes=50))

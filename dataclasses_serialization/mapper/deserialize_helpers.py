@@ -147,7 +147,7 @@ def datetime_utc_from_inspected_type(data: Union[str, int]) -> datetime:
 
 @any_class_deserializer
 def datetime_utc_from_milliseconds(millis: int) -> datetime:
-    return datetime.utcfromtimestamp(millis / 1000)
+    return datetime.utcfromtimestamp(millis / 1000).replace(tzinfo=timezone.utc)
 
 
 @any_class_deserializer
