@@ -14,14 +14,15 @@ except ImportError:
     bson_installed = False
 
 try:
-    from dataclasses_serialization.bson import BSONSerializer, BSONSerializerMixin, BSONStrSerializer, BSONStrSerializerMixin
+    from dataclasses_serialization.bson import (BSONSerializer, BSONSerializerMixin, BSONStrSerializer,
+                                                BSONStrSerializerMixin)
 except ImportError:
     BSONSerializer, BSONSerializerMixin, BSONStrSerializer, BSONStrSerializerMixin = [None] * 4
 
 if 'OPTIONAL_MODULES' in environ:
     bson_installed = (
-        'bson' in environ['OPTIONAL_MODULES'] or
-        'pymongo' in environ['OPTIONAL_MODULES']
+            'bson' in environ['OPTIONAL_MODULES'] or
+            'pymongo' in environ['OPTIONAL_MODULES']
     )
 
 
@@ -138,4 +139,5 @@ class TestBSON(TestCase):
 class TestBSONNotInstalled(TestCase):
     def test_bson_raises_import_error(self):
         with self.assertRaises(ImportError):
+            # noinspection PyUnresolvedReferences
             import dataclasses_serialization.bson
