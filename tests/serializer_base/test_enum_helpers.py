@@ -17,11 +17,10 @@ class TestEnumHelpers:
             SampleOtherEnum: enum_from_value
         }
 
-        self._mapper = (
-            JsonMapper()
-                .register_serializers(self._serializers)
-                .register_deserializers(self._deserializers)
-        )
+        self._mapper = (JsonMapper()
+                        .register_serializers(self._serializers)
+                        .register_deserializers(self._deserializers)
+                        )
 
     @pytest.mark.parametrize('enum_type, value, expected_enum', (
             (SampleEnum, 'item', SampleEnum.item),
