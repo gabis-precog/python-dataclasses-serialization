@@ -25,4 +25,3 @@ def float_serializer(value: float) -> Optional[float]:
         if isinf(value):
             return None  # todo: is this a good idea ?
     return value
-

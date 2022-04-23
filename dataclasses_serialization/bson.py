@@ -16,7 +16,10 @@ try:
 
     except AttributeError:
         # Fallback to pymongo version of bson
-        bson_loads = lambda bson_str: bson.BSON(bson_str).decode()
+        def bson_loads(bson_str):
+            return bson.BSON(bson_str).decode()
+
+
         bson_dumps = bson.BSON.encode
 
 except ImportError:
@@ -43,7 +46,7 @@ def bson_int_deserializer(cls, obj):
 
     try:
         coerced_obj = cls(obj)
-    except:
+    except Exception:
         coerced_obj = None
 
     if coerced_obj == obj:

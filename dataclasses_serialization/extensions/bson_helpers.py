@@ -8,7 +8,10 @@ try:
 
     except AttributeError:
         # Fallback to pymongo version of bson
-        bson_loads = lambda bson_str: bson.BSON(bson_str).decode()
+        def bson_loads(bson_str):
+            return bson.BSON(bson_str).decode()
+
+
         bson_dumps = bson.BSON.encode
 
 except ImportError:

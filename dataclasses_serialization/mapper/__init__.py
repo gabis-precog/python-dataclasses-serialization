@@ -10,9 +10,8 @@ The mapping can be either overridden, or expand on the defaults.
 ...             dict_deserialization, list_deserialization
 ...           )
 
-To override the defaults completely, pass new values to **serialization_functions** and **deserialization_functions** arguments.
-To leave the defaults, instantiate a JsonMapper, and supply `dataclasses_serialization.mapper.mapper.Mapper.register_serializers`
-and `dataclasses_serialization.mapper.mapper.Mapper.register_deserializers` with the new mapping methods:
+To override the defaults completely, pass new values to **serialization_functions** and **deserialization_functions**
+arguments.
 
 >>> custom_mapper = Mapper(
 ...    serialization_functions=lambda mapper: {

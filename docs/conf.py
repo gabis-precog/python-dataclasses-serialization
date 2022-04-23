@@ -72,4 +72,3 @@ autodoc_default_flags = ['members']
 autosummary_generate = True
 autodoc_typehints = 'description'
 autodoc_typehints_format = 'short'
-

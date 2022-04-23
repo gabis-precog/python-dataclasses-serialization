@@ -48,4 +48,3 @@ Support for mapping some numpy types. Example usage:
 array([[1, 2, 3],
        [4, 5, 6]])
 """
-

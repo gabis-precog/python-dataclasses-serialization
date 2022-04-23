@@ -13,7 +13,7 @@ class TestMapperNumpy:
 
     def test_serialize_numpy_primitive(self):
         assert self._mapper.serialize(numpy.int64(467465)) == 467465
-        assert self._mapper.serialize(numpy.bool_(True)) == True
+        assert self._mapper.serialize(numpy.bool_(True)) is True
         assert self._mapper.serialize(numpy.array([[1, 2, 3], [4, 5, 6]])) == [[1, 2, 3], [4, 5, 6]]
 
     def test_deserialize_numpy_primitive(self):
