@@ -20,14 +20,16 @@ Dataclasses Serialization
 
 
 `dataclasses_serialization` provides serializers/deserializers for transforming between Python dataclasses,
-and JSON and BSON objects. Support is available for:
-* dataclasses
-* attrs classes
-* python native types (including Enums)
-* relativedelta (dateutil)
-* numpy (int64, bool, ndarray)
-* key normalization for python (underscore) and java (camelCase) conventions
-* bson
+and JSON and BSON objects.
+
+Brief supported features summary:
+- dataclasses
+- attrs classes
+- python native types (including Enums)
+- relativedelta (dateutil)
+- numpy (int64, bool, ndarray)
+- key normalization for python (underscore) and java (camelCase) conventions
+- bson
 
 .. note::
    This documentation is for the fork at https://github.com/gabis-precog/python-dataclasses-serialization.
