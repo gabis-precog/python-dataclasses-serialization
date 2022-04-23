@@ -3,7 +3,6 @@ from typing import Any
 
 from dateutil.relativedelta import relativedelta
 
-from dataclasses_serialization.mapper.deserialize_helpers import timedelta_from_milliseconds
 from dataclasses_serialization.mapper.serialize_helpers import timedelta_to_milliseconds
 from dataclasses_serialization.serializer_base.errors import DeserializationError
 
@@ -22,21 +21,6 @@ def relativedelta_to_timedelta(relative_delta: relativedelta) -> timedelta:
                      hours=normalized.hours,
                      minutes=normalized.minutes,
                      seconds=normalized.seconds)
-
-
-def timedelta_deserialize(cls, value: Any) -> timedelta:
-    if isinstance(value, timedelta):
-        return value
-
-    if isinstance(value, int):
-        return timedelta_from_milliseconds(value)
-
-    if isinstance(value, relativedelta):
-        return relativedelta_to_timedelta(value)
-
-    raise DeserializationError(
-        "Cannot deserialize {} to timedelta".format(value)
-    )
 
 
 def relativedelta_from_milliseconds(value: int):
@@ -61,20 +45,18 @@ def relativedelta_deserialize(cls, value: Any) -> relativedelta:
 
 def dateutil_serializers(mapper):
     """
-    serializers for timedelta and relativedelta
+    serializer for relativedelta
     """
     return {
-        timedelta: timedelta_to_milliseconds,
         relativedelta: relativedelta_to_milliseconds
     }
 
 
 def dateutil_deserializers(mapper):
     """
-    deserializers for timedelta and relativedelta
+    deserializer for relativedelta
     """
     return {
-        timedelta: timedelta_deserialize,
         relativedelta: relativedelta_deserialize
     }
 

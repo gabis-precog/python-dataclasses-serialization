@@ -48,10 +48,10 @@ def force_int_deserializer(cls, obj):
 
 
 def timedelta_deserialize(cls, value: Any) -> timedelta:
-    if is_instance(value, timedelta):
+    if isinstance(value, timedelta):
         return value
 
-    if is_instance(value, int):
+    if isinstance(value, int):
         return timedelta_from_milliseconds(value)
 
     raise DeserializationError(

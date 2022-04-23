@@ -68,11 +68,14 @@ class Serializer:
     @curry
     def register_serializer(self, cls, func):
         self.serialization_functions[cls] = func
+        return func
 
     @curry
     def register_deserializer(self, cls, func):
         self.deserialization_functions[cls] = func
+        return func
 
     def register(self, cls, serialization_func, deserialization_func):
         self.register_serializer(cls, serialization_func)
         self.register_deserializer(cls, deserialization_func)
+        return self

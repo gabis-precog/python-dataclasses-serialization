@@ -20,9 +20,10 @@ class Mapper(BaseSerialize):
 
     Unless you want to customize things from scratch, use one of the subclasses (eg. JsonMapper).
     """
+
     def __init__(self,
-                 serialization_functions: SerializerMap,
-                 deserialization_functions: SerializerMap,
+                 serialization_functions: SerializerMap = None,
+                 deserialization_functions: SerializerMap = None,
                  key_serializer=identity,
                  key_deserializer=identity
                  ):
