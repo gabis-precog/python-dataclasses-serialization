@@ -38,6 +38,7 @@ Deserialize
 
 .. automodule:: dataclasses_serialization.mapper.deserialize_helpers
     :members:
+    :undoc-members:
 
 
 Enum
