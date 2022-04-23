@@ -1,12 +1,11 @@
-import json
-from typing import Union, Optional, TypeVar, Type, Any
+from typing import Optional, TypeVar, Type
 
 from toolz import curry
+from toolz import identity
 
 from dataclasses_serialization.mapper.argument_helpers import merge_lazy_dicts
 from dataclasses_serialization.mapper.typing import SerializerMap
 from dataclasses_serialization.serializer_base import Serializer as BaseSerialize
-from toolz import identity
 from dataclasses_serialization.serializer_base.typing import dataclass_field_types
 
 __all__ = ['Mapper']
@@ -51,13 +50,6 @@ class Mapper(BaseSerialize):
             return None
 
         return super().deserialize(cls, serialized_obj)
-
-    @curry
-    def from_json(self, cls: Type[T], data: Union[str, bytes], **kwargs) -> Optional[T]:
-        return self.deserialize(cls, json.loads(data, **kwargs))
-
-    def to_json(self, data: Any, **kwargs) -> str:
-        return json.dumps(self.serialize(data), **kwargs)
 
     def register_serializers(self, serializers: SerializerMap):
         """

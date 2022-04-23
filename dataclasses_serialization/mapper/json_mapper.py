@@ -1,14 +1,18 @@
-from typing import Optional
+import json
+from typing import Union, Optional, Type, Any, TypeVar
+
+from toolz import identity, curry
 
 from dataclasses_serialization.mapper.defaults import build_init_arguments, default_serializers, default_deserializers
 from dataclasses_serialization.mapper.deserialize_helpers import force_int_deserializer
 from dataclasses_serialization.mapper.mapper import Mapper
 from dataclasses_serialization.mapper.typing import SerializerMap
-from toolz import identity
 
 __all__ = [
     'JsonMapper'
 ]
+
+T = TypeVar('T')
 
 
 class JsonMapper(Mapper):
@@ -34,3 +38,10 @@ class JsonMapper(Mapper):
                                                 key_deserializer))
 
         self.register_deserializer(int, force_int_deserializer)
+
+    @curry
+    def from_json(self, cls: Type[T], data: Union[str, bytes], **kwargs) -> Optional[T]:
+        return self.deserialize(cls, json.loads(data, **kwargs))
+
+    def to_json(self, data: Any, **kwargs) -> str:
+        return json.dumps(self.serialize(data), **kwargs)

@@ -13,6 +13,7 @@ v1.4.0 (TBA))
 - Sample mapping for Support **Enum** mapping (Optional)
 - Sample mapping for **datetime** and **timedelta** (Enabled by default, represented as milliseconds)
 - Extension support: some **numpy** types
+- Extension support: attrs classes with type hints
 - Extension support: key mapping for python and java conventions (Optional)
 - Extension support: dateutil **relativedelta**
 - Added **JsonMapper** and **BsonMapper** to instantiate and customize mappers instead of using global single instance
