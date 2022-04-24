@@ -7,6 +7,11 @@ from dataclasses_serialization.serializer_base import DeserializationError, dict
 from dataclasses_serialization.serializer_base.typing import (register_extension_isinstance,
                                                               register_extension_issubclass)
 
+__all__ = [
+    'attrs_serializers',
+    'attrs_deserializers',
+    'dict_to_attrs'
+]
 
 @register_extension_isinstance(attrs)
 def attrs_isinstance(o, t):

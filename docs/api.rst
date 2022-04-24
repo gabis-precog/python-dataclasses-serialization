@@ -68,3 +68,11 @@ Numpy
 
 .. automodule:: dataclasses_serialization.extensions.numpy_helpers
     :members:
+
+
+attrs
+~~~~~
+
+.. automodule:: dataclasses_serialization.extensions.attrs_helpers
+    :members:
+    :undoc-members:
