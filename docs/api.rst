@@ -50,7 +50,7 @@ Enum
 Extensions
 ----------
 
-Dataclass property names
+Class property names
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: dataclasses_serialization.extensions.key_helpers
